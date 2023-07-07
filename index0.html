@@ -23,23 +23,12 @@
 <div class="content-top">
 <h2 herf="">图标收集</h2>
 <ul>
-<li class="li1"><a href="https://getquicker.net/Guides/Guide?id=66ac708c-895b-40bc-6d9c-08da16da9c3c&step=8a44f972-2c4a-4826-6f48-08da169f1f43" target="_blank"><i>瓜皮图标坞</i></a><br>
+<li><a href="https://getquicker.net/Guides/Guide?id=66ac708c-895b-40bc-6d9c-08da16da9c3c&step=8a44f972-2c4a-4826-6f48-08da169f1f43" target="_blank"><i>瓜皮图标坞</i></a><br>
 <a href="图标0.html">文件类图标①</a><br>
 <a href="图标1.html">文件类图标②</a>
 </li>
-<p id="poem"></p>
-    <p id="info"></p>
 
-<script src="https://sdk.jinrishici.com/v2/browser/jinrishici.js" charset="utf-8"></script>
-<script type="text/javascript">
-    jinrishici.load(function(result) {
-      var poem =  result.data.content;
-      var info = "【"+result.data.origin.dynasty+"】"+ result.data.origin.author +"《" + result.data.origin.title + "》";
-      document.getElementById("poem").value(poem);
-      document.getElementById("info").value(info);
-    })
-</script>
-<!-- <span>待编辑</span> -->
+<span>待编辑</span>
 </li>
 </ul>
 </div>
@@ -47,17 +36,20 @@
 <p class="footer">©<a href="https://yuanyue1234.github.io/" target="_blank">阿晴</a>. All Rights Reserved</p>
 </div>
 <ul class="bg-bubbles">
-<li>富强</li><li>民主</li><li>文明</li><li>和谐</li>
-<li>自由</li><li>平等</li><li>公正</li><li>法治</li>
-<li>爱国</li><li>敬业</li><li>诚信</li><li>友善</li>
+<li>富强、民主、文明、和谐</li>
+<li>自由、平等、公正、法治</li>
+<li>爱国、敬业、诚信、友善</li>
 </ul>
 </div>
-</div>
+</div><section id="SIR">
+      <button class="SIR-toggle-button SIR-button">自动获取图片</button>
+      <div class="SIR-cover"></div>
+      <div class="SIR-main-wrap">
           <ul class="SIR-main">
           </ul>
           <div class="SIR-tools">
             <select class="SIR-filter-mini-button SIR-button">
-              <!-- <option value="0">不进行过滤</option> -->
+              <option value="0">不进行过滤</option>
               <option value="50">宽高大于 50</option>
               <option value="100">宽高大于 100</option>
               <option value="150">宽高大于 150</option>
@@ -66,7 +58,7 @@
               <option value="400">宽高大于 400</option>
               <option value="600">宽高大于 600</option>
               <option value="800">宽高大于 800</option>
-              <!-- <option value="1000">宽高大于 1000</option> -->
+              <option value="1000">宽高大于 1000</option>
             </select>
             <button class="SIR-download-bat-button SIR-button">批量下载（部分可能失败）</button>
           </div>
