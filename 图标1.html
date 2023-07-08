@@ -8,14 +8,14 @@
 <style>
 #btnCopyToClipboard {
         border-radius: 18px;
-    height: 100ph; /* 大一点的高度 */
+        height: 100ph; /* 大一点的高度 */
+    width: 120px;
     line: height 50px; /* 和高度一致形成垂直居中 */
     padding: 10px 10px; /* 左右间距 */
     margin: 10px 10px; /* 上下0,左右50px */
     border: 5px solid rgba(0,0,0,0.3); /* 5px 黑色半透明描边 */ 
     box-shadow: 0px 0px 5px 1px rgba(0,0,0,0.3); 
     text-align: center;
-    color: rgba(0,0,0,0);
 }
 
 .btn {
@@ -35,6 +35,19 @@
     line-height: 1.5;
     border-radius: .25rem;
     transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+}
+#backtotop {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  opacity: 0.8; 
+}
+
+#backtotop:hover {
+  opacity: 1 red;
+}
+#center{
+        text-align: center;
 }
 .b{
         background: rgb(2,0,36);
@@ -59,15 +72,17 @@ a {
   border: 5px solid rgba(0,0,0,0.3); 
 }
 img{
-    width: 70%;
-  height: 70%;
+    width: 60%;
+  height: 60%;
 }
 </style>
 <body class="b">
-        <div><h1><a href="index.html">返回</a></h1></div>
-        <div><h2>右击图标——复制图片链接 即可</h2>/div>
+        <div><h1>右击图标——复制图片链接 即可</h1>
+        <div class="bd1"> <a id="center" href="https://www.iconfont.cn/collections/detail?spm=a313x.7781069.1998910419.dc64b3430&cid=31647">点击前往原网址</a></div>
+        <div><h2><a href="index.html">返回</a></h2></div>
+        <button id="backtotop">回到顶部</button>
 <div class="bd1">
-    <button id="btnCopyToClipboard"><img src="https://asunny-1314135129.cos.ap-guangzhou.myqcloud.com/%E5%9B%BE%E6%A0%87/050-file.png"></button>
+<button id="btnCopyToClipboard"><img src="https://asunny-1314135129.cos.ap-guangzhou.myqcloud.com/%E5%9B%BE%E6%A0%87/050-file.png"></button>
 <button id="btnCopyToClipboard"><img src="https://asunny-1314135129.cos.ap-guangzhou.myqcloud.com/%E5%9B%BE%E6%A0%87/001-file.png"></button>
 <button id="btnCopyToClipboard"><img src="https://asunny-1314135129.cos.ap-guangzhou.myqcloud.com/%E5%9B%BE%E6%A0%87/049-file.png"></button>
 <button id="btnCopyToClipboard"><img src="https://asunny-1314135129.cos.ap-guangzhou.myqcloud.com/%E5%9B%BE%E6%A0%87/048-file.png"></button>
@@ -116,5 +131,28 @@ img{
 <button id="btnCopyToClipboard"><img src="https://asunny-1314135129.cos.ap-guangzhou.myqcloud.com/%E5%9B%BE%E6%A0%87/005-file.png"></button>
 <button id="btnCopyToClipboard"><img src="https://asunny-1314135129.cos.ap-guangzhou.myqcloud.com/%E5%9B%BE%E6%A0%87/004-file.png"></button>
 <button id="btnCopyToClipboard"><img src="https://asunny-1314135129.cos.ap-guangzhou.myqcloud.com/%E5%9B%BE%E6%A0%87/003-clipboard.png"></button>
-<button id="btnCopyToClipboard"><img src="https://asunny-1314135129.cos.ap-guangzhou.myqcloud.com/%E5%9B%BE%E6%A0%87/002-file.png"></button>
+<button id="btnCopyToClipboard"><img src="https://asunny-1314135129.cos.ap-guangzhou.myqcloud.com/%E5%9B%BE%E6%A0%87/002-file.png">
+</button>
 </div>
+<script>// 获取按钮元素
+        const backtotop = document.getElementById('backtotop');
+        
+        // 点击按钮滚动到页面顶部
+        backtotop.addEventListener('click', () => {
+          window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+          });
+        });
+        
+        // 控制按钮的显示和隐藏
+        window.addEventListener('scroll', () => {
+          if (window.pageYOffset > 300) {
+            backToTop.style.display = 'block';
+          } else {
+            backToTop.style.display = 'none';
+          }
+        });
+        </script>
+</body>
+</html>
