@@ -113,3 +113,12 @@ li a {
 }
 #SIR .SIR-download-program.active {
     display: flex;
+
+}
+.footer{
+    text-align: center;
+
+}
+p{
+    font-size: 10px;
+}
