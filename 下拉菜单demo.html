@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+      /* CSS样式开始 */
+      .dropdown {
+          display: none;
+          /* 初始时隐藏下拉菜单 */
+      }
+    
+      .dropdown.show {
+          display: block;
+          /* 当.dropdown元素有.show类时显示下拉菜单 */
+      }
+      .dropdown a{
+            text-align: left;
+            font-size: 12px;
+            /* 设置下拉菜单中链接的文本对齐和字体大小 */
+      }
+      .dropdown :hover{
+        text-decoration: underline;
+        /* 鼠标悬停时给下拉菜单中的链接添加下划线 */
+      }
+      </style>
+</head>
+
+<body>
+    <div class="container">
+        <button class="btn" id="btn">选择难度</button>
+          <!-- 难度选择按钮 -->
+          <label class="bx bx-chevron-down" id="arrow"></label>
+          <!-- 下拉箭头图标 -->
+          <div class="dropdown" id="dropdown">
+            <a><i id="1">菜单选项1</i></a><br>
+              <!-- 下拉菜单选项1 -->
+              <a><i id="2">菜单选项2</i></a><br>
+                <!-- 下拉菜单选项2 -->
+                <a><i id="3">菜单选项3</i></a>
+                <!-- 下拉菜单选项3 -->
+          </div>
+      </div>
+</body>
+</html>
+  <script>
+  // JavaScript脚本开始
+  document.addEventListener('DOMContentLoaded', function() { 
+    const btn = document.getElementById('btn');
+    const dropdown = document.getElementById('dropdown');
+    const arrow = document.getElementById('arrow');
+
+    // 为按钮添加点击事件，切换下拉菜单的显示状态
+    btn.addEventListener('click', function() {
+      dropdown.classList.toggle('show');
+      // 切换箭头方向
+      arrow.classList.toggle('bx-chevron-up');
+    });
+
+    // 为下拉菜单中的每个选项添加点击事件
+    dropdown.querySelectorAll('a > i').forEach(function(item) {
+      item.addEventListener('click', function() {
+        // 更新按钮文本为选中的选项
+        btn.textContent = item.textContent;
+        dropdown.classList.remove('show');
+        // 如果你想在选择后隐藏下拉菜单，取消注释下面的代码
+        // dropdown.classList.remove('show');
+      });
+    });
+  });
+
+  </script>

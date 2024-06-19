@@ -1,0 +1,44 @@
+button[data-wtmzjk-mag-url] {
+	all: initial;
+	border: none;
+	outline: none;
+	background: none;
+	background: #f7d308;
+	background: #08a6f7;
+	background-repeat: repeat-x repeat-y;
+	margin: 2px 8px;
+	border-radius: 3px;
+	color: white;
+	cursor: pointer;
+	display: inline-flex;
+	height: 1.6em;
+	padding: 0 .8em;
+	align-items: center;
+	justify-content: center;
+	transition: background .15s;
+	text-decoration: none;
+	border-radius: 0.8em;
+	font-size: small;
+}
+
+
+
+button[data-wtmzjk-mag-url]:hover {
+	background: #fae157;
+	background: #39b9f9;
+	background-repeat: repeat-x repeat-y;
+}
+
+button[data-wtmzjk-mag-url]:active {
+	background: #dfbe07;
+	background: #0797df;
+	background-repeat: repeat-x repeat-y;
+}
+
+button[data-wtmzjk-mag-url]>span {
+	pointer-events: none;
+	font-size: small;
+	margin-right: .5em;
+	font-weight: bold;
+	color: white !important;
+}
