@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"> <!-- 设置文档的字符编码为UTF-8 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- 设置视口，确保页面在移动设备上显示良好 -->
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" /> <!-- 引入图标库 -->
+    <title>轮播图</title> <!-- 设置网页标题 -->
+</head>
+<style>
+    #all{
+        margin: auto;
+        width: 500px;
+        height: 500px;
+    }
+    #all i{
+        font-size: 40px;
+    }
+    .content{
+        width: 100%; /* 设置宽度为100% */
+        height: 0;
+        padding-top: 56.25%; /* 16:9的宽高比 */
+        position: relative;
+        /* padding-top: 56.25%;：通过设置上内边距为宽度的56.25%来控制高度，从而实现16:9的宽高比。
+           position: relative;：使容器成为相对定位，这样它内部的绝对定位元素可以相对于它定位。 */
+    }
+    .content img{
+        height: 100%;
+        display: block;
+        width: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+        object-fit: cover; /* 保持宽高比，多余的部分会被裁剪 */
+        /* position: absolute;：将图片设置为绝对定位，使其相对于容器进行定位。
+            top: 0;和left: 0;：将图片放置在容器的左上角。
+            object-fit: cover;：保持图片的宽高比，同时裁剪超出的部分以完全覆盖容器。 */
+    }
+    *{
+        box-sizing: border-box;
+    }
+    h3{
+        text-align: center;
+        color: #8D0000;
+        font-size: 24px;
+        /* 设置h3元素的文本对齐、颜色和字体大小 */
+    }
+    img{
+        overflow-clip-margin: content-box;
+        overflow:auto;
+    }
+    .foot{
+        text-align: center;
+        background-color: #FFD700;
+    }
+    .slider-indicator{
+        margin: 0;
+        padding: 0;
+        list-style: none;
+        display: flex;
+        align-items: center;
+    }
+</style>
+<body bgcolor="#efeee1"> <!-- 设置页面背景颜色 -->
+    <div id="all">
+        <div class="content">
+            <img src="https://asunny-1314135129.cos.ap-guangzhou.myqcloud.com/img/00.png"> <!-- 默认显示的图片 ,请你替换成自己的图片相对路径 --> 
+            <div class="foot">
+                <i id="left" class='bx bxs-left-arrow-circle' ></i> <!-- 左箭头图标 -->
+                <i id="right" class='bx bxs-right-arrow-circle' ></i> <!-- 右箭头图标 -->
+            </div>
+            <h3>轮播图</h3>
+        </div>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() { 
+            // 获取左、右按钮元素
+            const leftButton = document.getElementById('left')
+            const rightButton = document.getElementById('right')
+            let i = 0; // 初始化图片索引
+            let timer; // 定时器变量
+            // 右按钮点击事件
+            rightButton.addEventListener('click', function() {
+                i = (i + 1) % 5; // 索引加1并取模运算以实现循环
+                toggle(); // 切换图片
+            });
+
+            // 左按钮点击事件
+            leftButton.addEventListener('click', function() {
+                i = (i - 1 + 5) % 5; // 索引减1并取模运算以实现循环
+                toggle(); // 切换图片
+            });
+
+            // 获取图片元素
+            const img = document.querySelector(".content img");
+
+            // 切换图片函数
+            function toggle() {
+                img.src = "https://asunny-1314135129.cos.ap-guangzhou.myqcloud.com/img/0" + i + '.png'; // 更新图片路径
+            }
+
+            // 获取底部元素
+            const footer = document.querySelector(".foot");
+
+            // 设置定时器，每2秒切换一次图片
+            timer = setInterval(function() {
+                rightButton.click(); // 模拟右按钮点击
+            }, 2000);
+
+            // 当鼠标移出底部区域时，重新启动定时器
+            footer.addEventListener('mouseleave', function() {
+                timer = setInterval(function() {
+                    rightButton.click(); // 模拟右按钮点击
+                }, 2000);
+            });
+
+            // 当鼠标进入底部区域时，清除定时器
+            footer.addEventListener('mouseenter', function() {
+                clearInterval(timer); // 清除定时器
+            });
+        });
+    </script>
+</body>
+</html>

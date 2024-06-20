@@ -1,76 +1,83 @@
 <!DOCTYPE html>
 <!-- 文档类型声明，这里指定了文档是HTML5 -->
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <!-- 设置字符编码为UTF-8 -->
-    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
-    <!-- 引入boxicons图标库的样式表 -->
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- 视口设置，用于响应式设计 -->
-    <title>注册页面</title>
-    <!-- 页面标题 -->
+  <meta charset="UTF-8">
+  <!-- 设置字符编码为UTF-8 -->
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
+  <!-- 引入boxicons图标库的样式表 -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- 视口设置，用于响应式设计 -->
+  <title>注册页面</title>
+  <!-- 页面标题 -->
 </head>
 
 <body>
   <style>
     /* CSS样式开始 */
     .dropdown {
-        display: none;
-        /* 初始时隐藏下拉菜单 */
+      display: none;
+      /* 初始时隐藏下拉菜单 */
     }
 
     .dropdown.show {
-        display: block;
-        /* 当.dropdown元素有.show类时显示下拉菜单 */
+      display: block;
+      /* 当.dropdown元素有.show类时显示下拉菜单 */
     }
-    .dropdown a{
-          text-align: left;
-          font-size: 12px;
-          /* 设置下拉菜单中链接的文本对齐和字体大小 */
+
+    .dropdown a {
+      text-align: left;
+      font-size: 12px;
+      /* 设置下拉菜单中链接的文本对齐和字体大小 */
     }
-    .dropdown :hover{
+
+    .dropdown :hover {
       text-decoration: underline;
       /* 鼠标悬停时给下拉菜单中的链接添加下划线 */
     }
-    #all{
+
+    #all {
       margin: auto;
       width: 40%;
       height: 100%;
       /* 设置id为all的元素的外边距、宽度和高度 */
     }
-    input{
+
+    input {
       margin: auto;
       display: block;
-        width: 100%;
-        padding: .75rem .75rem;
-        font-size: 1rem;
-        font-weight: 400;
-        line-height: 1.5;
-        color:#000;
-        appearance: none;
-        background-color:#F9F8EB;
-        border:solid 1px #acacac;
-        border-radius:6px;
-        /* 设置输入框的样式 */
+      width: 100%;
+      padding: .75rem .75rem;
+      font-size: 1rem;
+      font-weight: 400;
+      line-height: 1.5;
+      color: #000;
+      appearance: none;
+      background-color: #F9F8EB;
+      border: solid 1px #acacac;
+      border-radius: 6px;
+      /* 设置输入框的样式 */
     }
-    h3{
+
+    h3 {
       text-align: center;
       color: #E3BF00;
       font-size: 24px;
       /* 设置h3元素的文本对齐、颜色和字体大小 */
     }
 
-    
-    label{
+
+    label {
       font-weight: 300;
       line-height: 34px;
       /* 设置标签的字体粗细和行高 */
     }
+
     /* CSS样式结束 */
   </style>
   <div id="all">
-    
+
     <h3>注册界面</h3>
     <!-- 页面主标题 -->
     <label for="user" id="账号" name="账号">账号:</label>
@@ -84,42 +91,43 @@
     <br>
     <div class="container">
       <button class="btn" id="btn">选择难度</button>
-        <!-- 难度选择按钮 -->
-        <label class="bx bx-chevron-down" id="arrow"></label>
-        <!-- 下拉箭头图标 -->
-        <div class="dropdown" id="dropdown">
-          <a><i id="1">菜鸟模式</i></a><br>
-            <!-- 下拉菜单选项1 -->
-            <a><i id="2">正常水平</i></a><br>
-              <!-- 下拉菜单选项2 -->
-              <a><i id="3">炼狱模式</i></a>
-              <!-- 下拉菜单选项3 -->
-        </div>
-    </div>
-      
-
-    <div style="display: block; float: right;">
-    <input style="color: #fff; width: 100px; text-align: center; background-color: #8D0000;" id="submit" type="submit" value="submit" />
-      <!-- 提交按钮 -->
+      <!-- 难度选择按钮 -->
+      <label class="bx bx-chevron-down" id="arrow"></label>
+      <!-- 下拉箭头图标 -->
+      <div class="dropdown" id="dropdown">
+        <a><i id="1">菜鸟模式</i></a><br>
+        <!-- 下拉菜单选项1 -->
+        <a><i id="2">正常水平</i></a><br>
+        <!-- 下拉菜单选项2 -->
+        <a><i id="3">炼狱模式</i></a>
+        <!-- 下拉菜单选项3 -->
       </div>
     </div>
-    <script>
-    // JavaScript脚本开始
-    document.addEventListener('DOMContentLoaded', function() { 
+
+
+    <div style="display: block; float: right;">
+      <input style="color: #fff; width: 100px; text-align: center; background-color: #8D0000;" id="submit" type="submit"
+        value="submit"  onclick="register()"/>
+      <!-- 提交按钮 -->
+    </div>
+  </div>
+  <script>
+    // JavaScript脚本开始 ,'DOMContentLoaded' 是一个事件，当 HTML 文档被完全加载和解析完成后触发，不需要等待样式表、图像和子框架完成加载。
+    document.addEventListener('DOMContentLoaded', function () {
       const btn = document.getElementById('btn');
       const dropdown = document.getElementById('dropdown');
       const arrow = document.getElementById('arrow');
 
       // 为按钮添加点击事件，切换下拉菜单的显示状态
-      btn.addEventListener('click', function() {
+      btn.addEventListener('click', function () {
         dropdown.classList.toggle('show');
         // 切换箭头方向
         arrow.classList.toggle('bx-chevron-up');
       });
 
       // 为下拉菜单中的每个选项添加点击事件
-      dropdown.querySelectorAll('a > i').forEach(function(item) {
-        item.addEventListener('click', function() {
+      dropdown.querySelectorAll('a > i').forEach(function (item) {
+        item.addEventListener('click', function () {
           // 更新按钮文本为选中的选项
           btn.textContent = item.textContent;
           dropdown.classList.remove('show');
@@ -128,20 +136,33 @@
         });
       });
     });
-
-    document.getElementById('submit').addEventListener('click', function(){
+    function register() {
+      const username = document.getElementById('user').value;
+      const password = document.getElementById('pswd').value;
       var trouble = btn.textContent;
-      var user = document.getElementById('user').value;
-      var pswd = document.getElementById('pswd').value;
 
-      alert(`账号创建成功!!
-      难度:${trouble},
-      账号:${user},
-      密码:${pswd}
-请登录!`);
-      // 弹出提示框显示账号创建成功信息
-    });
+      // 检查账号和密码的长度是否符合规范
+      if (username.length >= 8 && password.length >= 8) {
+        // 检查密码是否包含大小写字母、数字和特殊字符
+        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+        if (passwordRegex.test(password)) {
+          alert("账号创建成功!!")
+        } else {
+          alert('密码必须包含大小写字母、数字和特殊字符!');
+        }
+      } else {
+        alert('账号和密码必须至少8位以上!');
+      }
+    }
+
+    // document.getElementById('submit').addEventListener('click', function () {
+
+
+
+    //   // 弹出提示框显示账号创建成功信息
+    // });
     // JavaScript脚本结束
-    </script>
+  </script>
 </body>
+
 </html>
