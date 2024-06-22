@@ -1,19 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="css/index1.css" rel="stylesheet" type="text/css">
         <title>Document</title>
 </head>
 <style>
         #btnCopyToClipboard {
                 border-radius: 18px;
-                height: 100ph; /* 大一点的高度 */
+                height: 100ph;
+                /* 大一点的高度 */
                 width: 100px;
-                line: height 50px; /* 和高度一致形成垂直居中 */
-                padding: 10px 10px; /* 左右间距 */
-                margin: 10px 10px; /* 上下0,左右50px */
-                border: 1px solid rgba(0, 0, 0, 0.3); /* 5px 黑色半透明描边 */
+
+                padding: 10px 10px;
+                /* 左右间距 */
+                margin: 10px 10px;
+                /* 上下0,左右50px */
+                border: 1px solid rgba(0, 0, 0, 0.3);
+                /* 5px 黑色半透明描边 */
                 box-shadow: 0px 0px 5px 1px rgba(0, 0, 0, 0.3);
                 text-align: center;
         }
@@ -34,7 +40,7 @@
                 font-size: 1rem;
                 line-height: 1.5;
                 border-radius: .25rem;
-                transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+
         }
 
         .background {
@@ -42,15 +48,14 @@
                 background: linear-gradient(to bottom right, #01a982 0, #60ae80 100%);
         }
 
-        .bd1 {
-                margin: 25px 25px 25px 25px;
-                text-align: center;
-        }
-
         h1 {
                 text-align: center;
                 color: white;
 
+        }
+
+        .bd1 {
+                text-align: center;
         }
 
         img {
@@ -64,101 +69,135 @@
         }
 
         a {
+                /* text-decoration: none; */
                 color: white;
-                border: 5px solid rgba(0, 0, 0, 0.3);
         }
 
-        #backtotop {
+
+        .backtotopurl {
                 position: fixed;
                 bottom: 20px;
-                right: 20px;
+                left: 20px;
                 opacity: 0.8;
-        }
+                z-index: auto;
 
-        #backtotop:hover {
-                opacity: 1 red;
         }
-
-        #center {
-                text-align: center;
+        .footer{
+                font-size:18px ;
         }
 </style>
+
 <body class="background">
-        <div><h1>右击图标——复制图片链接 即可</h1>
-        <div class="bd1"> <a id="center" href="https://www.iconfont.cn/collections/detail?spm=a313x.7781069.1998910419.dc64b3430&cid=31647">点击前往原网址</a></div>
-        <div><h2><a href="index.html">返回</a></h2></div>
-        <button id="backtotop">回到顶部</button>
-<div class="bd1">
-<button class="btn btn-link" id="btnCopyToClipboard"><img src="https://asunny-1314135129.cos.ap-guangzhou.myqcloud.com/%E5%9B%BE%E6%A0%87/050-file.png"></button>
-<button class="btn btn-link" id="btnCopyToClipboard"><img src="https://asunny-1314135129.cos.ap-guangzhou.myqcloud.com/%E5%9B%BE%E6%A0%87/001-file.png"></button>
-<button class="btn btn-link" id="btnCopyToClipboard"><img src="https://asunny-1314135129.cos.ap-guangzhou.myqcloud.com/%E5%9B%BE%E6%A0%87/049-file.png"></button>
-<button class="btn btn-link" id="btnCopyToClipboard"><img src="https://asunny-1314135129.cos.ap-guangzhou.myqcloud.com/%E5%9B%BE%E6%A0%87/048-file.png"></button>
-<button class="btn btn-link" id="btnCopyToClipboard"><img src="https://asunny-1314135129.cos.ap-guangzhou.myqcloud.com/%E5%9B%BE%E6%A0%87/047-file.png"></button>
-<button class="btn btn-link" id="btnCopyToClipboard"><img src="https://asunny-1314135129.cos.ap-guangzhou.myqcloud.com/%E5%9B%BE%E6%A0%87/046-download.png"></button>
-<button class="btn btn-link" id="btnCopyToClipboard"><img src="https://asunny-1314135129.cos.ap-guangzhou.myqcloud.com/%E5%9B%BE%E6%A0%87/045-file.png"></button>
-<button class="btn btn-link" id="btnCopyToClipboard"><img src="https://asunny-1314135129.cos.ap-guangzhou.myqcloud.com/%E5%9B%BE%E6%A0%87/044-folder.png"></button>
-<button class="btn btn-link" id="btnCopyToClipboard"><img src="https://asunny-1314135129.cos.ap-guangzhou.myqcloud.com/%E5%9B%BE%E6%A0%87/043-file.png"></button>
-<button class="btn btn-link" id="btnCopyToClipboard"><img src="https://asunny-1314135129.cos.ap-guangzhou.myqcloud.com/%E5%9B%BE%E6%A0%87/042-file.png"></button>
-<button class="btn btn-link" id="btnCopyToClipboard"><img src="https://asunny-1314135129.cos.ap-guangzhou.myqcloud.com/%E5%9B%BE%E6%A0%87/041-file.png"></button>
-<button class="btn btn-link" id="btnCopyToClipboard"><img src="https://asunny-1314135129.cos.ap-guangzhou.myqcloud.com/%E5%9B%BE%E6%A0%87/040-file.png"></button>
-<button class="btn btn-link" id="btnCopyToClipboard"><img src="https://asunny-1314135129.cos.ap-guangzhou.myqcloud.com/%E5%9B%BE%E6%A0%87/039-file.png"></button>
-<button class="btn btn-link" id="btnCopyToClipboard"><img src="https://asunny-1314135129.cos.ap-guangzhou.myqcloud.com/%E5%9B%BE%E6%A0%87/038-file.png"></button>
-<button class="btn btn-link" id="btnCopyToClipboard"><img src="https://asunny-1314135129.cos.ap-guangzhou.myqcloud.com/%E5%9B%BE%E6%A0%87/037-file.png"></button>
-<button class="btn btn-link" id="btnCopyToClipboard"><img src="https://asunny-1314135129.cos.ap-guangzhou.myqcloud.com/%E5%9B%BE%E6%A0%87/036-file.png"></button>
-<button class="btn btn-link" id="btnCopyToClipboard"><img src="https://asunny-1314135129.cos.ap-guangzhou.myqcloud.com/%E5%9B%BE%E6%A0%87/035-file.png"></button>
-<button class="btn btn-link" id="btnCopyToClipboard"><img src="https://asunny-1314135129.cos.ap-guangzhou.myqcloud.com/%E5%9B%BE%E6%A0%87/034-file.png"></button>
-<button class="btn btn-link" id="btnCopyToClipboard"><img src="https://asunny-1314135129.cos.ap-guangzhou.myqcloud.com/%E5%9B%BE%E6%A0%87/033-file.png"></button>
-<button class="btn btn-link" id="btnCopyToClipboard"><img src="https://asunny-1314135129.cos.ap-guangzhou.myqcloud.com/%E5%9B%BE%E6%A0%87/032-folder.png"></button>
-<button class="btn btn-link" id="btnCopyToClipboard"><img src="https://asunny-1314135129.cos.ap-guangzhou.myqcloud.com/%E5%9B%BE%E6%A0%87/031-file.png"></button>
-<button class="btn btn-link" id="btnCopyToClipboard"><img src="https://asunny-1314135129.cos.ap-guangzhou.myqcloud.com/%E5%9B%BE%E6%A0%87/030-file.png"></button>
-<button class="btn btn-link" id="btnCopyToClipboard"><img src="https://asunny-1314135129.cos.ap-guangzhou.myqcloud.com/%E5%9B%BE%E6%A0%87/029-clipboard.png"></button>
-<button class="btn btn-link" id="btnCopyToClipboard"><img src="https://asunny-1314135129.cos.ap-guangzhou.myqcloud.com/%E5%9B%BE%E6%A0%87/028-file.png"></button>
-<button class="btn btn-link" id="btnCopyToClipboard"><img src="https://asunny-1314135129.cos.ap-guangzhou.myqcloud.com/%E5%9B%BE%E6%A0%87/027-file.png"></button>
-<button class="btn btn-link" id="btnCopyToClipboard"><img src="https://asunny-1314135129.cos.ap-guangzhou.myqcloud.com/%E5%9B%BE%E6%A0%87/026-file.png"></button>
-<button class="btn btn-link" id="btnCopyToClipboard"><img src="https://asunny-1314135129.cos.ap-guangzhou.myqcloud.com/%E5%9B%BE%E6%A0%87/025-file.png"></button>
-<button class="btn btn-link" id="btnCopyToClipboard"><img src="https://asunny-1314135129.cos.ap-guangzhou.myqcloud.com/%E5%9B%BE%E6%A0%87/024-folder.png"></button>
-<button class="btn btn-link" id="btnCopyToClipboard"><img src="https://asunny-1314135129.cos.ap-guangzhou.myqcloud.com/%E5%9B%BE%E6%A0%87/023-file.png"></button>
-<button class="btn btn-link" id="btnCopyToClipboard"><img src="https://asunny-1314135129.cos.ap-guangzhou.myqcloud.com/%E5%9B%BE%E6%A0%87/022-file.png"></button>
-<button class="btn btn-link" id="btnCopyToClipboard"><img src="https://asunny-1314135129.cos.ap-guangzhou.myqcloud.com/%E5%9B%BE%E6%A0%87/021-file.png"></button>
-<button class="btn btn-link" id="btnCopyToClipboard"><img src="https://asunny-1314135129.cos.ap-guangzhou.myqcloud.com/%E5%9B%BE%E6%A0%87/020-folder.png"></button>
-<button class="btn btn-link" id="btnCopyToClipboard"><img src="https://asunny-1314135129.cos.ap-guangzhou.myqcloud.com/%E5%9B%BE%E6%A0%87/019-file.png"></button>
-<button class="btn btn-link" id="btnCopyToClipboard"><img src="https://asunny-1314135129.cos.ap-guangzhou.myqcloud.com/%E5%9B%BE%E6%A0%87/018-file.png"></button>
-<button class="btn btn-link" id="btnCopyToClipboard"><img src="https://asunny-1314135129.cos.ap-guangzhou.myqcloud.com/%E5%9B%BE%E6%A0%87/017-file.png"></button>
-<button class="btn btn-link" id="btnCopyToClipboard"><img src="https://asunny-1314135129.cos.ap-guangzhou.myqcloud.com/%E5%9B%BE%E6%A0%87/016-file.png"></button>
-<button class="btn btn-link" id="btnCopyToClipboard"><img src="https://asunny-1314135129.cos.ap-guangzhou.myqcloud.com/%E5%9B%BE%E6%A0%87/015-file.png"></button>
-<button class="btn btn-link" id="btnCopyToClipboard"><img src="https://asunny-1314135129.cos.ap-guangzhou.myqcloud.com/%E5%9B%BE%E6%A0%87/014-file.png"></button>
-<button class="btn btn-link" id="btnCopyToClipboard"><img src="https://asunny-1314135129.cos.ap-guangzhou.myqcloud.com/%E5%9B%BE%E6%A0%87/013-file.png"></button>
-<button class="btn btn-link" id="btnCopyToClipboard"><img src="https://asunny-1314135129.cos.ap-guangzhou.myqcloud.com/%E5%9B%BE%E6%A0%87/012-file.png"></button>
-<button class="btn btn-link" id="btnCopyToClipboard"><img src="https://asunny-1314135129.cos.ap-guangzhou.myqcloud.com/%E5%9B%BE%E6%A0%87/011-file.png"></button>
-<button class="btn btn-link" id="btnCopyToClipboard"><img src="https://asunny-1314135129.cos.ap-guangzhou.myqcloud.com/%E5%9B%BE%E6%A0%87/010-file.png"></button>
-<button class="btn btn-link" id="btnCopyToClipboard"><img src="https://asunny-1314135129.cos.ap-guangzhou.myqcloud.com/%E5%9B%BE%E6%A0%87/009-file.png"></button>
-<button class="btn btn-link" id="btnCopyToClipboard"><img src="https://asunny-1314135129.cos.ap-guangzhou.myqcloud.com/%E5%9B%BE%E6%A0%87/008-file.png"></button>
-<button class="btn btn-link" id="btnCopyToClipboard"><img src="https://asunny-1314135129.cos.ap-guangzhou.myqcloud.com/%E5%9B%BE%E6%A0%87/007-file.png"></button>
-<button class="btn btn-link" id="btnCopyToClipboard"><img src="https://asunny-1314135129.cos.ap-guangzhou.myqcloud.com/%E5%9B%BE%E6%A0%87/006-file.png"></button>
-<button class="btn btn-link" id="btnCopyToClipboard"><img src="https://asunny-1314135129.cos.ap-guangzhou.myqcloud.com/%E5%9B%BE%E6%A0%87/005-file.png"></button>
-<button class="btn btn-link" id="btnCopyToClipboard"><img src="https://asunny-1314135129.cos.ap-guangzhou.myqcloud.com/%E5%9B%BE%E6%A0%87/004-file.png"></button>
-<button class="btn btn-link" id="btnCopyToClipboard"><img src="https://asunny-1314135129.cos.ap-guangzhou.myqcloud.com/%E5%9B%BE%E6%A0%87/003-clipboard.png"></button>
-<button class="btn btn-link" id="btnCopyToClipboard"><img src="https://asunny-1314135129.cos.ap-guangzhou.myqcloud.com/%E5%9B%BE%E6%A0%87/002-file.png"></button>
-</div>
-<script>// 获取按钮元素
-        const backtotop = document.getElementById('backtotop');
-        
-        // 点击按钮滚动到页面顶部
-        backtotop.addEventListener('click', () => {
-          window.scrollTo({
-            top: 0,
-            behavior: 'smooth'
-          });
-        });
-        
-        // 控制按钮的显示和隐藏
-        window.addEventListener('scroll', () => {
-          if (window.pageYOffset > 300) {
-            backToTop.style.display = 'block';
-          } else {
-            backToTop.style.display = 'none';
-          }
-        });
-        </script>
+        <div class="bd1">
+                <h1>文档图标</h1>
+                <button class="backtotopurl"> <a id="center"href="https://www.iconfont.cn/collections/detail?spm=a313x.7781069.1998910419.dc64b3430&cid=31647">前往原网址</a></button>
+                <h2><a href="index.html">右击图标然后复制图片链接</a></h2>
+                <div>
+                        <button class="btn btn-link" id="btnCopyToClipboard"><img
+                                        src="https://asunny-1314135129.cos.ap-guangzhou.myqcloud.com/%E5%9B%BE%E6%A0%87/050-file.png"></button>
+                        <button class="btn btn-link" id="btnCopyToClipboard"><img
+                                        src="https://asunny-1314135129.cos.ap-guangzhou.myqcloud.com/%E5%9B%BE%E6%A0%87/001-file.png"></button>
+                        <button class="btn btn-link" id="btnCopyToClipboard"><img
+                                        src="https://asunny-1314135129.cos.ap-guangzhou.myqcloud.com/%E5%9B%BE%E6%A0%87/049-file.png"></button>
+                        <button class="btn btn-link" id="btnCopyToClipboard"><img
+                                        src="https://asunny-1314135129.cos.ap-guangzhou.myqcloud.com/%E5%9B%BE%E6%A0%87/048-file.png"></button>
+                        <button class="btn btn-link" id="btnCopyToClipboard"><img
+                                        src="https://asunny-1314135129.cos.ap-guangzhou.myqcloud.com/%E5%9B%BE%E6%A0%87/047-file.png"></button>
+                        <button class="btn btn-link" id="btnCopyToClipboard"><img
+                                        src="https://asunny-1314135129.cos.ap-guangzhou.myqcloud.com/%E5%9B%BE%E6%A0%87/046-download.png"></button>
+                        <button class="btn btn-link" id="btnCopyToClipboard"><img
+                                        src="https://asunny-1314135129.cos.ap-guangzhou.myqcloud.com/%E5%9B%BE%E6%A0%87/045-file.png"></button>
+                        <button class="btn btn-link" id="btnCopyToClipboard"><img
+                                        src="https://asunny-1314135129.cos.ap-guangzhou.myqcloud.com/%E5%9B%BE%E6%A0%87/044-folder.png"></button>
+                        <button class="btn btn-link" id="btnCopyToClipboard"><img
+                                        src="https://asunny-1314135129.cos.ap-guangzhou.myqcloud.com/%E5%9B%BE%E6%A0%87/043-file.png"></button>
+                        <button class="btn btn-link" id="btnCopyToClipboard"><img
+                                        src="https://asunny-1314135129.cos.ap-guangzhou.myqcloud.com/%E5%9B%BE%E6%A0%87/042-file.png"></button>
+                        <button class="btn btn-link" id="btnCopyToClipboard"><img
+                                        src="https://asunny-1314135129.cos.ap-guangzhou.myqcloud.com/%E5%9B%BE%E6%A0%87/041-file.png"></button>
+                        <button class="btn btn-link" id="btnCopyToClipboard"><img
+                                        src="https://asunny-1314135129.cos.ap-guangzhou.myqcloud.com/%E5%9B%BE%E6%A0%87/040-file.png"></button>
+                        <button class="btn btn-link" id="btnCopyToClipboard"><img
+                                        src="https://asunny-1314135129.cos.ap-guangzhou.myqcloud.com/%E5%9B%BE%E6%A0%87/039-file.png"></button>
+                        <button class="btn btn-link" id="btnCopyToClipboard"><img
+                                        src="https://asunny-1314135129.cos.ap-guangzhou.myqcloud.com/%E5%9B%BE%E6%A0%87/038-file.png"></button>
+                        <button class="btn btn-link" id="btnCopyToClipboard"><img
+                                        src="https://asunny-1314135129.cos.ap-guangzhou.myqcloud.com/%E5%9B%BE%E6%A0%87/037-file.png"></button>
+                        <button class="btn btn-link" id="btnCopyToClipboard"><img
+                                        src="https://asunny-1314135129.cos.ap-guangzhou.myqcloud.com/%E5%9B%BE%E6%A0%87/036-file.png"></button>
+                        <button class="btn btn-link" id="btnCopyToClipboard"><img
+                                        src="https://asunny-1314135129.cos.ap-guangzhou.myqcloud.com/%E5%9B%BE%E6%A0%87/035-file.png"></button>
+                        <button class="btn btn-link" id="btnCopyToClipboard"><img
+                                        src="https://asunny-1314135129.cos.ap-guangzhou.myqcloud.com/%E5%9B%BE%E6%A0%87/034-file.png"></button>
+                        <button class="btn btn-link" id="btnCopyToClipboard"><img
+                                        src="https://asunny-1314135129.cos.ap-guangzhou.myqcloud.com/%E5%9B%BE%E6%A0%87/033-file.png"></button>
+                        <button class="btn btn-link" id="btnCopyToClipboard"><img
+                                        src="https://asunny-1314135129.cos.ap-guangzhou.myqcloud.com/%E5%9B%BE%E6%A0%87/032-folder.png"></button>
+                        <button class="btn btn-link" id="btnCopyToClipboard"><img
+                                        src="https://asunny-1314135129.cos.ap-guangzhou.myqcloud.com/%E5%9B%BE%E6%A0%87/031-file.png"></button>
+                        <button class="btn btn-link" id="btnCopyToClipboard"><img
+                                        src="https://asunny-1314135129.cos.ap-guangzhou.myqcloud.com/%E5%9B%BE%E6%A0%87/030-file.png"></button>
+                        <button class="btn btn-link" id="btnCopyToClipboard"><img
+                                        src="https://asunny-1314135129.cos.ap-guangzhou.myqcloud.com/%E5%9B%BE%E6%A0%87/029-clipboard.png"></button>
+                        <button class="btn btn-link" id="btnCopyToClipboard"><img
+                                        src="https://asunny-1314135129.cos.ap-guangzhou.myqcloud.com/%E5%9B%BE%E6%A0%87/028-file.png"></button>
+                        <button class="btn btn-link" id="btnCopyToClipboard"><img
+                                        src="https://asunny-1314135129.cos.ap-guangzhou.myqcloud.com/%E5%9B%BE%E6%A0%87/027-file.png"></button>
+                        <button class="btn btn-link" id="btnCopyToClipboard"><img
+                                        src="https://asunny-1314135129.cos.ap-guangzhou.myqcloud.com/%E5%9B%BE%E6%A0%87/026-file.png"></button>
+                        <button class="btn btn-link" id="btnCopyToClipboard"><img
+                                        src="https://asunny-1314135129.cos.ap-guangzhou.myqcloud.com/%E5%9B%BE%E6%A0%87/025-file.png"></button>
+                        <button class="btn btn-link" id="btnCopyToClipboard"><img
+                                        src="https://asunny-1314135129.cos.ap-guangzhou.myqcloud.com/%E5%9B%BE%E6%A0%87/024-folder.png"></button>
+                        <button class="btn btn-link" id="btnCopyToClipboard"><img
+                                        src="https://asunny-1314135129.cos.ap-guangzhou.myqcloud.com/%E5%9B%BE%E6%A0%87/023-file.png"></button>
+                        <button class="btn btn-link" id="btnCopyToClipboard"><img
+                                        src="https://asunny-1314135129.cos.ap-guangzhou.myqcloud.com/%E5%9B%BE%E6%A0%87/022-file.png"></button>
+                        <button class="btn btn-link" id="btnCopyToClipboard"><img
+                                        src="https://asunny-1314135129.cos.ap-guangzhou.myqcloud.com/%E5%9B%BE%E6%A0%87/021-file.png"></button>
+                        <button class="btn btn-link" id="btnCopyToClipboard"><img
+                                        src="https://asunny-1314135129.cos.ap-guangzhou.myqcloud.com/%E5%9B%BE%E6%A0%87/020-folder.png"></button>
+                        <button class="btn btn-link" id="btnCopyToClipboard"><img
+                                        src="https://asunny-1314135129.cos.ap-guangzhou.myqcloud.com/%E5%9B%BE%E6%A0%87/019-file.png"></button>
+                        <button class="btn btn-link" id="btnCopyToClipboard"><img
+                                        src="https://asunny-1314135129.cos.ap-guangzhou.myqcloud.com/%E5%9B%BE%E6%A0%87/018-file.png"></button>
+                        <button class="btn btn-link" id="btnCopyToClipboard"><img
+                                        src="https://asunny-1314135129.cos.ap-guangzhou.myqcloud.com/%E5%9B%BE%E6%A0%87/017-file.png"></button>
+                        <button class="btn btn-link" id="btnCopyToClipboard"><img
+                                        src="https://asunny-1314135129.cos.ap-guangzhou.myqcloud.com/%E5%9B%BE%E6%A0%87/016-file.png"></button>
+                        <button class="btn btn-link" id="btnCopyToClipboard"><img
+                                        src="https://asunny-1314135129.cos.ap-guangzhou.myqcloud.com/%E5%9B%BE%E6%A0%87/015-file.png"></button>
+                        <button class="btn btn-link" id="btnCopyToClipboard"><img
+                                        src="https://asunny-1314135129.cos.ap-guangzhou.myqcloud.com/%E5%9B%BE%E6%A0%87/014-file.png"></button>
+                        <button class="btn btn-link" id="btnCopyToClipboard"><img
+                                        src="https://asunny-1314135129.cos.ap-guangzhou.myqcloud.com/%E5%9B%BE%E6%A0%87/013-file.png"></button>
+                        <button class="btn btn-link" id="btnCopyToClipboard"><img
+                                        src="https://asunny-1314135129.cos.ap-guangzhou.myqcloud.com/%E5%9B%BE%E6%A0%87/012-file.png"></button>
+                        <button class="btn btn-link" id="btnCopyToClipboard"><img
+                                        src="https://asunny-1314135129.cos.ap-guangzhou.myqcloud.com/%E5%9B%BE%E6%A0%87/011-file.png"></button>
+                        <button class="btn btn-link" id="btnCopyToClipboard"><img
+                                        src="https://asunny-1314135129.cos.ap-guangzhou.myqcloud.com/%E5%9B%BE%E6%A0%87/010-file.png"></button>
+                        <button class="btn btn-link" id="btnCopyToClipboard"><img
+                                        src="https://asunny-1314135129.cos.ap-guangzhou.myqcloud.com/%E5%9B%BE%E6%A0%87/009-file.png"></button>
+                        <button class="btn btn-link" id="btnCopyToClipboard"><img
+                                        src="https://asunny-1314135129.cos.ap-guangzhou.myqcloud.com/%E5%9B%BE%E6%A0%87/008-file.png"></button>
+                        <button class="btn btn-link" id="btnCopyToClipboard"><img
+                                        src="https://asunny-1314135129.cos.ap-guangzhou.myqcloud.com/%E5%9B%BE%E6%A0%87/007-file.png"></button>
+                        <button class="btn btn-link" id="btnCopyToClipboard"><img
+                                        src="https://asunny-1314135129.cos.ap-guangzhou.myqcloud.com/%E5%9B%BE%E6%A0%87/006-file.png"></button>
+                        <button class="btn btn-link" id="btnCopyToClipboard"><img
+                                        src="https://asunny-1314135129.cos.ap-guangzhou.myqcloud.com/%E5%9B%BE%E6%A0%87/005-file.png"></button>
+                        <button class="btn btn-link" id="btnCopyToClipboard"><img
+                                        src="https://asunny-1314135129.cos.ap-guangzhou.myqcloud.com/%E5%9B%BE%E6%A0%87/004-file.png"></button>
+                        <button class="btn btn-link" id="btnCopyToClipboard"><img
+                                        src="https://asunny-1314135129.cos.ap-guangzhou.myqcloud.com/%E5%9B%BE%E6%A0%87/003-clipboard.png"></button>
+                        <button class="btn btn-link" id="btnCopyToClipboard"><img
+                                        src="https://asunny-1314135129.cos.ap-guangzhou.myqcloud.com/%E5%9B%BE%E6%A0%87/002-file.png"></button>
+                </div>
+                <p class="footer">
+                        <a href="index.html" target="_blank">返回首页</a>
+                    </p>
+        </div>
 </body>
 </html>
+</body>

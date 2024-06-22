@@ -137,9 +137,26 @@ li a {
 
 .footer {
     text-align: center;
-
 }
 
 p {
     font-size: 10px;
+}
+
+button {
+    margin:0px;
+    padding: 10px;
+    background-color: #02cc9d;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+button:hover {
+    background-color: #007b5f;
+}
+h2 a{
+    color: white;
+    border-bottom: 1px solid green;
+    margin: 2px 0;
 }

@@ -402,7 +402,7 @@ p.footer a:hover {
     }
 
     p.footer {
-        margin-top: 42px
+        margin-top: 28px
     }
 }
 
@@ -421,7 +421,7 @@ p.footer a:hover {
 
     p.footer {
         line-height: 1.8em;
-        margin: 42px auto 0;
+        margin:28px auto 0;
         width: 85%
     }
 }
@@ -437,7 +437,7 @@ p.footer a:hover {
     }
 
     p.footer {
-        margin: 32px auto 0
+        margin: 28px auto 0
     }
 }
 
@@ -494,14 +494,4 @@ p.footer a:hover {
     .wrapper {
         height: 100%;
     }
-
-    /*.wrapper {*/
-    /*	background: rgb(2, 0, 36);*/
-    /*	background: linear-gradient(90deg, rgba(2, 0, 36, 1) 0%, rgba(9, 9, 121, 1) 35%, rgba(0, 212, 255, 1) 100%);*/
-    /*	background-repeat: repeat-x repeat-y;*/
-    /*}*/
-    /*#all {*/
-    /*	background-repeat: repeat-y repeat-x;*/
-    /*}*/
-
 }
