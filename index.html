@@ -9,6 +9,50 @@
     <link href="https://buliangfabuye.com/favicon.ico" rel="favicon">
     <link href="css/index1.css" rel="stylesheet" type="text/css">
     <link href="css/style.css" rel="stylesheet" type="text/css">
+    <style>
+        /*  画廊样式 */
+        .gallery {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .gallery-container {
+            display: flex;
+            justify-content: center;
+            padding: 20px;
+            margin-top: auto; /* 将画廊放置在页面底部 */
+        }
+        .gallery-item {
+            width: 100px;
+            text-align: center;
+            transition: transform 0.2s;
+        }
+        .gallery-item img {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            cursor: pointer;
+            border-radius: 10px;
+            transition: transform 0.2s;
+        }
+        .gallery-item img:hover {
+            transform: scale(1.1);
+        }
+        .gallery-item p {
+            margin: 5px 0 0 0;
+            font-size: 12px;
+        }
+        .admin-controls {
+           /* 显示添加图片按钮 ：block */
+            display: none;
+            margin-top: 20px;
+            text-align: center;
+        }
+        .admin-controls input, .admin-controls button {
+            margin: 5px;
+        }
+
+    </style>
 </head>
 
 <body>
@@ -25,53 +69,136 @@
                             <br>
                         </div>
                 </div>
+            
                 <p class="footer">
                     <a href="index.html" target="_blank">返回首页</a>
                 </p>
-            </div>
+                <div class="gallery-container">
+                    <div class="gallery" id="gallery"></div>
+                </div>
+            
+                <div class="admin-controls" id="adminControls">
+                    <label for="imageUrl">图片url</label>
+                    <input type="text" id="imageUrl" placeholder="图片URL">
+                    <label for="linkUrl">链接url</label>
+                    <input type="text" id="linkUrl" placeholder="链接URL">
+                    <label for="description">图片描述</label>
+                    <input type="text" id="description" placeholder="图片描述">
+                    <button onclick="addImage()">添加图片</button>
+                </div>
+            </div> 
         </div>
     </div>
     <script>
-let i = 1;
+        let i = localStorage.getItem('pageState') ? parseInt(localStorage.getItem('pageState')) : 1;
 
-function page() {
-    const contentText = document.getElementById('content-text');
-    if (i % 2 === 0) {
-        contentText.innerHTML = `
-            <h2><a href="./作业展示/index.html">html作业</h2>   </h2>
-            <ul>
-                <li>
-                    <a href="下拉菜单和注册.html">下拉菜单&注册页</a><br>
-                    <a href="demo/轮播图demo.html">轮播图</a><br>
-                    <a href="JS项目.html">综合JS项目</a>
-                </li>
-            </ul>
-        `;
-    } else {
-        contentText.innerHTML = `
-            <h2><a href="https://getquicker.net/Guides/Guide?id=52593d69-c99a-4367-8b98-08d9a65be47e&step=3e46ee2a-77c0-4479-0c2b-08dc35ad6871">瓜皮图标坞</a></h2>
-            <ul>
-                <li>
-                    <a href="图标0.html">文件类图标 ①</a><br>
-                    <a href="图标1.html">文件类图标 ②</a><br>
-                    <a href=""></a><br>
-                </li>
-            </ul>
-        `;
-    }
-}
-page()
+        function page() {
+            const contentText = document.getElementById('content-text');
+            if (i % 2 === 0) {
+                contentText.innerHTML = `
+                    <h2><a href="./作业展示/index.html">html作业</h2>   </h2>
+                    <ul>
+                        <li>
+                            <a href="下拉菜单和注册.html">下拉菜单&注册页</a><br>
+                            <a href="demo/轮播图demo.html">轮播图</a><br>
+                            <a href="JS项目.html">综合JS项目</a>
+                        </li>
+                    </ul>
+                `;
+            } else {
+                contentText.innerHTML = `
+                    <h2><a href="https://getquicker.net/Guides/Guide?id=52593d69-c99a-4367-8b98-08d9a65be47e&step=3e46ee2a-77c0-4479-0c2b-08dc35ad6871">瓜皮图标坞</a></h2>
+                    <ul>
+                        <li>
+                            <a href="图标0.html">文件类图标 ①</a><br>
+                            <a href="图标1.html">文件类图标 ②</a><br>
+                            <a href=""></a><br>
+                        </li>
+                    </ul>
+                `;
+            }
+        }
 
-function changeContentleft() {
-    i++;
-    page();
-}
+        function changeContentleft() {
+            i++;
+            localStorage.setItem('pageState', i);
+            page();
+        }
 
-function changeContentright() {
-    i++;
-    page();
-}
+        function changeContentright() {
+            i++;
+            localStorage.setItem('pageState', i);
+            page();
+        }
+
+        // 初始化
+        page();
     </script>
+        <script>
+            // 画廊脚本
+            const gallery = document.getElementById('gallery');
+            const adminControls = document.getElementById('adminControls');
+    
+            // 初始画廊数据
+            const initialImages = [
+                { imageUrl: "https://asunny-1314135129.cos.ap-guangzhou.myqcloud.com/img/logo2.png", linkUrl: "http://www.asunny.fun/", description: "阿晴的网盘"},
+                { imageUrl: "https://asunny-1314135129.cos.ap-guangzhou.myqcloud.com/img/19_%E6%8A%A0%E5%9B%BE.png", linkUrl: "https://bing.asunny.top/web/#/" ,description: "直接访问Copilot"},
+            ];
+    
+            function loadGallery() {
+                initialImages.forEach(image => {
+                    createGalleryItem(image.imageUrl, image.linkUrl, image.description);
+                });
+            }
+    
+            function createGalleryItem(imageUrl, linkUrl, description) {
+                const galleryItem = document.createElement('div');
+                galleryItem.classList.add('gallery-item');
+                
+                const link = document.createElement('a');
+                link.href = linkUrl;
+                
+                const img = document.createElement('img');
+                img.src = imageUrl;
+                
+                const desc = document.createElement('p');
+                desc.textContent = description;
+                
+                link.appendChild(img);
+                galleryItem.appendChild(link);
+                galleryItem.appendChild(desc);
+                gallery.appendChild(galleryItem);
+            }
+    
+            function addImage() {
+                const imageUrl = document.getElementById('imageUrl').value;
+                const linkUrl = document.getElementById('linkUrl').value;
+                const description = document.getElementById('description').value;
+    
+                if (imageUrl && linkUrl && description) {
+                    createGalleryItem(imageUrl, linkUrl, description);
+                    initialImages.push({ imageUrl, linkUrl, description });
+    
+                    document.getElementById('imageUrl').value = '';
+                    document.getElementById('linkUrl').value = '';
+                    document.getElementById('description').value = '';
+                } else {
+                    alert('请填写图片URL、链接URL和图片描述');
+                }
+            }
+    
+            function toggleAdminControls() {
+                adminControls.style.display = adminControls.style.display === 'none' ? 'block' : 'none';
+            }
+    
+            // 初始化
+            window.onload = function() {
+                loadGallery();
+    
+                // 仅在需要时启用以下行，模拟管理员模式
+                // toggleAdminControls();
+            };
+        </script>
 </body>
 
 </html>

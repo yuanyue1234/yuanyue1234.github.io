@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>画廊</title>
+    <style>
+        .gallery {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .gallery-item {
+            width: 100px;
+            text-align: center;
+            transition: transform 0.2s;
+        }
+        .gallery-item img {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            cursor: pointer;
+            border-radius: 10px;
+            transition: transform 0.2s;
+        }
+        .gallery-item img:hover {
+            transform: scale(1.1);
+        }
+        .gallery-item p {
+            margin: 5px 0 0 0;
+            font-size: 12px;
+        }
+        .admin-controls {
+            /* 显示添加图片按钮 ：block */
+            display: none; 
+            margin-top: 20px;
+        }
+        .admin-controls input, .admin-controls button {
+            margin: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h3>🔗快速链接</h3>
+    <div class="gallery" id="gallery"></div>
+    <div class="admin-controls" id="adminControls">
+        <input type="text" id="imageUrl" placeholder="图片URL">
+        <input type="text" id="linkUrl" placeholder="链接URL">
+        <input type="text" id="description" placeholder="图片描述">
+        <button onclick="addImage()">添加图片</button>
+    </div>
+    <script>
+        const gallery = document.getElementById('gallery');
+        const adminControls = document.getElementById('adminControls');
+
+        // 初始画廊数据
+        const initialImages = [
+            { imageUrl: "https://asunny-1314135129.cos.ap-guangzhou.myqcloud.com/img/logo2.png", linkUrl: "http://www.asunny.fun/", description: "阿晴的网盘"},
+            { imageUrl: "https://asunny-1314135129.cos.ap-guangzhou.myqcloud.com/img/19_%E6%8A%A0%E5%9B%BE.png", linkUrl: "https://bing.asunny.top/web/#/" ,description: "直接访问Copilot"},
+        ];
+
+        function loadGallery() {
+            initialImages.forEach(image => {
+                createGalleryItem(image.imageUrl, image.linkUrl, image.description);
+            });
+        }
+
+        function createGalleryItem(imageUrl, linkUrl, description) {
+            const galleryItem = document.createElement('div');
+            galleryItem.classList.add('gallery-item');
+            
+            const link = document.createElement('a');
+            link.href = linkUrl;
+            
+            const img = document.createElement('img');
+            img.src = imageUrl;
+            
+            const desc = document.createElement('p');
+            desc.textContent = description;
+            
+            link.appendChild(img);
+            galleryItem.appendChild(link);
+            galleryItem.appendChild(desc);
+            gallery.appendChild(galleryItem);
+        }
+
+        function addImage() {
+            const imageUrl = document.getElementById('imageUrl').value;
+            const linkUrl = document.getElementById('linkUrl').value;
+            const description = document.getElementById('description').value;
+
+            if (imageUrl && linkUrl && description) {
+                createGalleryItem(imageUrl, linkUrl, description);
+                initialImages.push({ imageUrl, linkUrl, description });
+
+                document.getElementById('imageUrl').value = '';
+                document.getElementById('linkUrl').value = '';
+                document.getElementById('description').value = '';
+            } else {
+                alert('请填写图片URL、链接URL和图片描述');
+            }
+        }
+
+        function toggleAdminControls() {
+            adminControls.style.display = adminControls.style.display === 'none' ? 'block' : 'none';
+        }
+
+        // 初始化
+        window.onload = function() {
+            loadGallery();
+
+            // 仅在需要时启用以下行，模拟管理员模式
+            // toggleAdminControls();
+        };
+    </script>
+</body>
+</html>
