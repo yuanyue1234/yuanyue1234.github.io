@@ -6,3 +6,9 @@
                         height="30"
                         src="https://asunny-1314135129.cos.ap-guangzhou.myqcloud.com/%E5%9B%BE%E6%A0%87/altqq.icon.png"
                         title="群:月の故乡🌙" width="30"></a>
+
+## 代办
+
+1. github写文章发布 ✅
+2. 公众号关联
+3. 飞书？notion? 分享关联
