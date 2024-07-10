@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"> <!-- 设置文档的字符编码为UTF-8 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- 设置视口，确保页面在移动设备上显示良好 -->
+    <title>轮播图</title> <!-- 设置网页标题 -->
+    <style>
+    /* 主容器样式 */
+    #all {
+        margin: auto; /* 居中对齐容器 */
+        width: 500px; /* 设置容器宽度为500像素 */
+        height: 500px; /* 设置容器高度为500像素 */
+        position: relative; /* 设置容器的定位方式为相对定位 */
+    }
+    
+    /* 箭头按钮样式 */
+    .arrow {
+        font-size: 40px; /* 设置字体大小为40像素 */
+        cursor: pointer; /* 设置鼠标悬停时显示为指针 */
+        position: absolute; /* 设置元素的定位方式为绝对定位 */
+        top: 50%; /* 设置元素距离顶部的距离为50% */
+        transform: translateY(-50%); /* 垂直方向上居中对齐 */
+        color: white; /* 设置字体颜色为白色 */
+        border-radius: 50%; /* 设置圆角为50%（使元素为圆形） */
+        width: 40px; /* 设置元素宽度为40像素 */
+        height: 40px; /* 设置元素高度为40像素 */
+        display: flex; /* 使用弹性布局 */
+        justify-content: center; /* 水平方向居中对齐 */
+        align-items: center; /* 垂直方向居中对齐 */
+        user-select: none; /* 禁止用户选择文本 */
+        background-color: rgba(0, 0, 0, 0.5); /* 设置背景颜色为半透明黑色 */
+    }
+    
+    /* 左箭头位置 */
+    #left {
+        left: 10px; /* 设置元素距离左边的距离为10像素 */
+    }
+    
+    /* 右箭头位置 */
+    #right {
+        right: 10px; /* 设置元素距离右边的距离为10像素 */
+    }
+    
+    /* 图片内容容器样式 */
+    .content {
+        width: 100%; /* 设置宽度为100% */
+        height: 100%; /* 设置高度为100% */
+        position: relative; /* 设置定位方式为相对定位 */
+    }
+    
+    /* 图片样式 */
+    .content img {
+        width: 100%; /* 设置图片宽度为100% */
+        height: 100%; /* 设置图片高度为100% */
+        object-fit: cover; /* 保持图片的宽高比，裁剪填充元素框 */
+        display: block; /* 设置图片为块级元素 */
+        border-radius: 10px; /* 设置图片的圆角为10像素 */
+    }
+    
+    /* 全局样式，设置盒模型为border-box */
+    * {
+        box-sizing: border-box; /* 设置盒模型的计算方式为border-box */
+    }
+    
+    /* 标题样式 */
+    h3 {
+        text-align: center; /* 设置文本居中对齐 */
+        color: #8D0000; /* 设置文本颜色为深红色 */
+        font-size: 24px; /* 设置字体大小为24像素 */
+    }
+    
+    /* 底部指示器容器样式 */
+    .foot {
+        text-align: center; /* 设置文本居中对齐 */
+        position: absolute; /* 设置定位方式为绝对定位 */
+        bottom: 10px; /* 设置元素距离底部的距离为10像素 */
+        width: 100%; /* 设置宽度为100% */
+        display: flex; /* 使用弹性布局 */
+        justify-content: center; /* 水平方向居中对齐 */
+        align-items: center; /* 垂直方向居中对齐 */
+    }
+    
+    /* 指示器样式 */
+    .slider-indicator {
+        margin: 0; /* 设置外边距为0 */
+        padding: 0; /* 设置内边距为0 */
+        list-style: none; /* 去除列表项的默认样式 */
+        display: flex; /* 使用弹性布局 */
+        align-items: center; /* 垂直方向居中对齐 */
+    }
+    
+    /* 单个指示器圆点样式 */
+    .slider-indicator li {
+        width: 10px; /* 设置圆点宽度为10像素 */
+        height: 10px; /* 设置圆点高度为10像素 */
+        background-color: #eaeaea; /* 设置圆点背景颜色为浅灰色 */
+        border-radius: 50%; /* 设置圆角为50%（使元素为圆形） */
+        margin: 0 5px; /* 设置外边距为0，左右各5像素 */
+        cursor: pointer; /* 设置鼠标悬停时显示为指针 */
+    }
+    
+    /* 活跃状态的指示器圆点样式 */
+    .slider-indicator li.active {
+        background-color: #8D0000; /* 设置背景颜色为深灰色 */
+    }
+    
+    </style>
+</head>
+<body bgcolor="#efeee1"> <!-- 设置页面背景颜色 -->
+    <div id="all">
+        <h1 style='text-align: center;'>ASUNNY</h1>
+        <div class="content">
+            <img src="https://asunny-1314135129.cos.ap-guangzhou.myqcloud.com/img/00.png"> <!-- 默认显示的图片 ,请你替换成自己的图片相对路径 --> 
+            <div id="left" class="arrow">&#9664;</div> <!-- 左箭头 -->
+            <div id="right" class="arrow">&#9654;</div> <!-- 右箭头 -->
+            <div class="foot">
+                <ul class="slider-indicator">
+                    <li class="active"></li>
+                    <li></li>
+                    <li></li>
+                    <li></li>
+                    <li></li>
+                </ul>
+            </div>
+            <h3>轮播图</h3>
+        </div>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() { 
+            const leftButton = document.getElementById('left'); // 获取左按钮元素
+            const rightButton = document.getElementById('right'); // 获取右按钮元素
+            const indicators = document.querySelectorAll('.slider-indicator li'); // 获取所有圆标元素
+            const img = document.querySelector(".content img"); // 获取图片元素
+            let i = 0; // 初始化图片索引
+            let timer; // 定时器变量
+
+            // 更新圆标状态函数
+            function updateIndicators(index) {
+                indicators.forEach((indicator, idx) => {
+                    indicator.classList.toggle('active', idx === index); // 设置当前圆标为活跃状态
+                });
+            }
+
+            // 切换图片函数
+            function toggle() {
+                img.src = "https://asunny-1314135129.cos.ap-guangzhou.myqcloud.com/img/0" + i + '.png'; // 更新图片路径
+                updateIndicators(i); // 更新圆标状态
+            }
+
+            // 切换图片索引并更新图片和指示器
+            function changeImage(index) {
+                i = (index + 5) % 5; // 更新索引并取模运算以实现循环
+                toggle(); // 切换图片
+            }
+
+            // 右按钮点击事件
+            rightButton.addEventListener('click', function() {
+                changeImage(i + 1); // 索引加1
+            });
+
+            // 左按钮点击事件
+            leftButton.addEventListener('click', function() {
+                changeImage(i - 1); // 索引减1
+            });
+
+            // 圆标点击事件
+            indicators.forEach((indicator, index) => {
+                indicator.addEventListener('click', function() {
+                    changeImage(index); // 设置当前索引并切换图片
+                });
+            });
+
+            const footArea = document.querySelector(".foot"); // 获取底部区域元素
+
+            // 设置定时器，每2秒切换一次图片
+            timer = setInterval(function() {
+                changeImage(i + 1); // 索引加1
+            }, 2000);
+
+            // 当鼠标移出底部区域时，重新启动定时器
+            function startAutoSlide() {
+                timer = setInterval(function() {
+                    changeImage(i + 1); // 索引加1
+                }, 2000);
+            }
+
+            // 当鼠标进入底部区域时，清除定时器
+            function stopAutoSlide() {
+                clearInterval(timer); // 清除定时器
+            }
+
+            // 添加鼠标事件监听器
+            footArea.addEventListener('mouseenter', stopAutoSlide);
+            footArea.addEventListener('mouseleave', startAutoSlide);
+            leftButton.addEventListener('mouseenter', stopAutoSlide);
+            leftButton.addEventListener('mouseleave', startAutoSlide);
+            rightButton.addEventListener('mouseenter', stopAutoSlide);
+            rightButton.addEventListener('mouseleave', startAutoSlide);
+        });
+    </script>
+</body>
+</html>

@@ -51,6 +51,12 @@
         .admin-controls input, .admin-controls button {
             margin: 5px;
         }
+        /* 画廊css样式 */
+        .gallery img{
+            /* width: 60%;
+            height: 60%; */
+            padding: 10px;
+        }
 
     </style>
 </head>
@@ -64,19 +70,33 @@
                     <div class="content-top" id="content-top">
                        <div id="content-text">
                             </div>
+                        
                             <button  style="float:left;" onclick="changeContentleft()"><</button>
                             <button style="float:right;" onclick="changeContentright()">></button>
                             <br>
                         </div>
                 </div>
             
-                <p class="footer">
-                    <a href="index.html" target="_blank">返回首页</a>
-                </p>
+
                 <div class="gallery-container">
+                    
                     <div class="gallery" id="gallery"></div>
+                    
                 </div>
-            
+                <p class="footer">
+                    <!-- <a >更多项目</a> -->
+                    <a href="https://qm.qq.com/q/t9NWzRRtCi" target="_blank">
+                        <img
+                        alt="联系我🌙"
+                        border="0"
+                        height="30"
+                        src="https://asunny-1314135129.cos.ap-guangzhou.myqcloud.com/%E5%9B%BE%E6%A0%87/altqq.icon.png"
+                        title="QQ联系我🌙" width="30"></a>
+                        <br>
+                    <a href="index.html" target="_blank">返回首页</a>
+                    
+                </p>
+                
                 <div class="admin-controls" id="adminControls">
                     <label for="imageUrl">图片url</label>
                     <input type="text" id="imageUrl" placeholder="图片URL">
@@ -142,7 +162,11 @@
             // 初始画廊数据
             const initialImages = [
                 { imageUrl: "https://asunny-1314135129.cos.ap-guangzhou.myqcloud.com/img/logo2.png", linkUrl: "http://www.asunny.fun/", description: "阿晴的网盘"},
-                { imageUrl: "https://asunny-1314135129.cos.ap-guangzhou.myqcloud.com/img/19_%E6%8A%A0%E5%9B%BE.png", linkUrl: "https://bing.asunny.top/web/#/" ,description: "直接访问Copilot"},
+                { imageUrl: "https://asunny-1314135129.cos.ap-guangzhou.myqcloud.com/img/slack.ico", 
+                linkUrl: "https://slack.com/oauth/v2/authorize?client_id=5275409334949.7396159868339&scope=app_mentions:read,channels:history,chat:write,commands,groups:history,im:history,mpim:history,users:read&user_scope=&state=A07BN4PRJ9Z" ,
+                description: "用Slack添加chatgpt3.5机器人"},
+                { imageUrl: "https://asunny-1314135129.cos.ap-guangzhou.myqcloud.com/img/19_%E6%8A%A0%E5%9B%BE.png", linkUrl: "https://bing.asunny.top/web/#/" ,description: "无条件访问Copilot"},
+                { imageUrl: "https://asunny-1314135129.cos.ap-guangzhou.myqcloud.com/img/welink.icon.png", linkUrl: "https://rj2306.asunny.top" ,description: "软件2306实训项目"},
             ];
     
             function loadGallery() {
@@ -199,6 +223,7 @@
                 // toggleAdminControls();
             };
         </script>
+        
 </body>
 
 </html>

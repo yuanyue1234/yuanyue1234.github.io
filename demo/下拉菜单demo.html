@@ -31,7 +31,7 @@
     <div class="container">
         <button class="btn" id="btn">选择难度</button>
           <!-- 难度选择按钮 -->
-          <label class="bx bx-chevron-down" id="arrow"></label>
+          <label id="work"> 职业</label>
           <!-- 下拉箭头图标 -->
           <div class="dropdown" id="dropdown">
             <a><i id="1">菜单选项1</i></a><br>
@@ -49,13 +49,13 @@
   document.addEventListener('DOMContentLoaded', function() { 
     const btn = document.getElementById('btn');
     const dropdown = document.getElementById('dropdown');
-    const arrow = document.getElementById('arrow');
+    const work = document.getElementById('work');
 
     // 为按钮添加点击事件，切换下拉菜单的显示状态
     btn.addEventListener('click', function() {
       dropdown.classList.toggle('show');
       // 切换箭头方向
-      arrow.classList.toggle('bx-chevron-up');
+      work.classList.toggle('bx-chevron-up');
     });
 
     // 为下拉菜单中的每个选项添加点击事件

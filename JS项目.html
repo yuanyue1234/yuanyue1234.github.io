@@ -179,19 +179,23 @@
 <script>
 // 注册
 document.addEventListener('DOMContentLoaded', function () {
+  // 获取按钮、箭头和下拉框元素
   const btn = document.getElementById('btn');
   const arrow = document.getElementById('arrow');
   const dropdown = document.getElementById('dropdown');
   const arrowElement = document.getElementById('arrow');
 
+  // 为箭头添加鼠标进入事件监听器，切换箭头方向
   arrow.addEventListener('mouseenter', function() {
     toggleArrow();
   });
 
+  // 为按钮添加点击事件监听器，切换箭头方向
   btn.addEventListener('click', function() {
     toggleArrow();
   });
 
+  // 切换箭头方向和下拉框显示
   function toggleArrow(){
     dropdown.classList.toggle('show');
     arrowElement.classList.toggle('bx-chevron-up');
@@ -202,14 +206,17 @@ document.addEventListener('DOMContentLoaded', function () {
       });
     });
   }
-});
+}
 
+// 注册函数，校验用户名和密码
 function register() {
+  // 获取用户名和密码元素
   const username = document.getElementById('user').value;
   const password = document.getElementById('pswd').value;
   const btn = document.getElementById('btn');
   const trouble = btn.textContent;
 
+  // 校验用户名和密码
   if (username.length >= 8 && password.length >= 8) {
     const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
     if (passwordRegex.test(password)) {
@@ -223,38 +230,47 @@ function register() {
 }
 
 document.addEventListener('DOMContentLoaded', function() { 
+    // 获取左右按钮元素
     const leftButton = document.getElementById('left')
     const rightButton = document.getElementById('right')
     let i = 0;
     let timer;
+    // 为右按钮添加点击事件监听器，切换图片
     rightButton.addEventListener('click', function() {
         i = (i + 1) % 5;
         toggle();
     });
 
+    // 为左按钮添加点击事件监听器，切换图片
     leftButton.addEventListener('click', function() {
         i = (i - 1 + 5) % 5;
         toggle();
     });
 
+    // 获取图片元素
     const img = document.querySelector(".content img");
 
+    // 切换图片
     function toggle() {
         img.src = "https://asunny-1314135129.cos.ap-guangzhou.myqcloud.com/img/0" + i + '.png';
     }
 
+    // 获取底部元素
     const footer = document.querySelector(".foot");
 
+    // 设置定时器，切换图片
     timer = setInterval(function() {
         rightButton.click();
     }, 2000);
 
+    // 监听底部元素mouseleave事件，重新设置定时器
     footer.addEventListener('mouseleave', function() {
         timer = setInterval(function() {
             rightButton.click();
         }, 2000);
     });
 
+    // 监听底部元素mouseenter事件，清除定时器
     footer.addEventListener('mouseenter', function() {
         clearInterval(timer);
     });
