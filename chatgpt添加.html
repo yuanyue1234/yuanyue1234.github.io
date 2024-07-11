@@ -1,0 +1,251 @@
+<html><head><title>ASUNNY - ChatGPT 工具</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <style>
+    :root {
+      --md-sys-color-primary: #6750A4;
+      --md-sys-color-on-primary: #FFFFFF;
+      --md-sys-color-primary-container: #EADDFF;
+      --md-sys-color-on-primary-container: #21005D;
+      --md-sys-color-secondary: #625B71;
+      --md-sys-color-on-secondary: #FFFFFF;
+      --md-sys-color-secondary-container: #E8DEF8;
+      --md-sys-color-on-secondary-container: #1D192B;
+      --md-sys-color-surface: #FFFBFE;
+      --md-sys-color-on-surface: #1C1B1F;
+      --md-sys-color-surface-variant: #E7E0EC;
+      --md-sys-color-on-surface-variant: #49454F;
+      --md-sys-color-outline: #79747E;
+      --md-sys-color-background: #FFFBFE;
+    }
+    html, body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Roboto', sans-serif;
+      background-color: var(--md-sys-color-background);
+      color: var(--md-sys-color-on-surface);
+      transition: background-color 0.3s, color 0.3s;
+      min-height: 100vh;
+      /* display: flex;
+      flex-direction: column; */
+    }
+    .container {
+      max-width: 800px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 0 15px;
+      flex-grow: 1;
+    }
+    header {
+      background-color: var(--md-sys-color-surface);
+      padding: 15px 0;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      transition: background-color 0.3s;
+    }
+    .header-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .header-content h1 {
+      font-size: 28px;
+      margin: 0;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      color: var(--md-sys-color-primary);
+    }
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 0;
+      background-color: var(--md-sys-color-surface);
+      max-width: 800px;
+      margin: 0 auto;
+      transition: background-color 0.3s;
+    }
+    nav a, .dropdown > span {
+      color: var(--md-sys-color-primary);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 14px;
+      padding: 8px 12px;
+      border-radius: 20px;
+      transition: background-color 0.3s, color 0.3s;
+      cursor: pointer;
+    }
+    nav a:hover, .dropdown > span:hover {
+      background-color: var(--md-sys-color-secondary-container);
+    }
+    p{
+      color: var(--md-sys-color-primary);
+    }
+    .dropdown {
+      position: relative;
+      display: inline-block;
+    }
+    .dropdown-content {
+      display: none;
+      position: absolute;
+      background-color: var(--md-sys-color-surface);
+      min-width: 160px;
+      box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+      z-index: 1;
+      border-radius: 8px;
+      overflow: hidden;
+      padding: 8px 0;
+      margin-top: 8px;
+    }
+    .dropdown-content a {
+      color: var(--md-sys-color-on-surface);
+      padding: 12px 16px;
+      text-decoration: none;
+      display: block;
+      transition: background-color 0.3s;
+      border-radius: 4px;
+      margin: 0 4px;
+    }
+    .dropdown-content a:hover {
+      background-color: var(--md-sys-color-surface-variant);
+    }
+    .dropdown:hover .dropdown-content {
+      display: block;
+    }
+    .chatgpt-interface {
+      margin-top: 40px;
+      background-color: var(--md-sys-color-surface);
+      padding: 30px;
+      border-radius: 16px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      transition: background-color 0.3s, box-shadow 0.3s;
+    }
+    .chatgpt-interface h2 {
+      color: var(--md-sys-color-primary);
+      margin-top: 0;
+      font-size: 24px;
+      margin-bottom: 20px;
+      border-bottom: 2px solid var(--md-sys-color-primary-container);
+      padding-bottom: 10px;
+    }
+    .chat-window {
+      height: 400px;
+      overflow-y: auto;
+      border-radius: 8px;
+      padding: 15px;
+      margin-bottom: 20px;
+    }
+    .chat-input {
+      display: flex;
+    }
+    .chat-input textarea {
+      flex-grow: 1;
+      border: 1px solid var(--md-sys-color-outline);
+      border-radius: 8px;
+      padding: 10px;
+      font-family: 'Roboto', sans-serif;
+      font-size: 14px;
+      resize: vertical;
+    }
+    .chat-input button {
+      background-color: var(--md-sys-color-primary);
+      color: var(--md-sys-color-on-primary);
+      border: none;
+      border-radius: 8px;
+      padding: 10px 20px;
+      margin-left: 10px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    .chat-input button:hover {
+      background-color: rgb(33, 19, 70)
+    }
+    .theme-toggle {
+      background: none;
+      border: none;
+      color: var(--md-sys-color-on-surface);
+      cursor: pointer;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      transition: background-color 0.3s;
+    }
+    .theme-toggle:hover {
+      background-color: var(--md-sys-color-surface-variant);
+    }
+    .theme-toggle i {
+      font-size: 24px;
+    }
+    body.dark-theme {
+      --md-sys-color-primary: #D0BCFF;
+      --md-sys-color-on-primary: #381E72;
+      --md-sys-color-primary-container: #4F378B;
+      --md-sys-color-on-primary-container: #EADDFF;
+      --md-sys-color-secondary: #CCC2DC;
+      --md-sys-color-on-secondary: #332D41;
+      --md-sys-color-secondary-container: #4A4458;
+      --md-sys-color-on-secondary-container: #E8DEF8;
+      --md-sys-color-surface: #1C1B1F;
+      --md-sys-color-on-surface: #E6E1E5;
+      --md-sys-color-surface-variant: #49454F;
+      --md-sys-color-on-surface-variant: #CAC4D0;
+      --md-sys-color-outline: #938F99;
+      --md-sys-color-background: #1C1B1F;
+    }
+    .chatgpt-interface {
+      animation: fadeIn 0.5s ease-out;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container header-content">
+      <h1><a style="text-decoration: none;" href="index1.html">ASUNNY</a></h1>
+      <button class="theme-toggle" aria-label="Toggle dark mode">
+        <i class="material-icons">light_mode</i>
+      </button>
+    </div>
+  </header>
+
+  <nav>
+    <a href="html作业.html">HTML作业</a>
+    <a href="图标.html">图标坞</a>
+    <a href="http://b.asunny.top/">博客</a>
+    <a href="http://www.asunny.fun/">网盘</a>
+    <div class="dropdown">
+        <span>工具</span>
+        <div class="dropdown-content">
+            <a href="chatgpt添加.html">ChatGPT</a>
+            <a href="https://bing.asunny.top/web/#/">Copilot</a>
+        </div>
+    </div>
+
+</nav>
+
+  <div class="container">
+    <div class="chatgpt-interface">
+      <h2>添加ChatGPT机器人</h2>
+      <div class="chat-window" id="chatWindow">
+        <img src="https://asunny-1314135129.cos.ap-guangzhou.myqcloud.com/img/20240711_104917_627_copy.png"/>
+        <p>这是一个slack机器人</p>
+        <p>你需要有一个slack账号</p>
+        <p>然后点击下面的按钮添加机器人</p>
+        <p>即可以畅通无阻的访问免费的ChatGPT</p>
+        <br>
+        <form class="chat-input" id="chatForm">
+        <button type="submit"><a style="color: white; text-decoration: none" href="https://slack.com/oauth/v2/authorize?client_id=5275409334949.7396159868339&scope=app_mentions:read,channels:history,chat:write,commands,groups:history,im:history,mpim:history,users:read&user_scope=&state=A07BN4PRJ9Z">添加</a></button>
+      </form>
+      </div>
+
+    </div>
+  </div>
+
+</body>
+</html>

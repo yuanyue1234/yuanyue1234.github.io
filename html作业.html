@@ -1,0 +1,284 @@
+<html>
+  <title>ASUNNY - HTML Homework</title>
+  <head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <style>
+    :root {
+      --md-sys-color-primary: #6750A4;
+      --md-sys-color-on-primary: #FFFFFF;
+      --md-sys-color-primary-container: #EADDFF;
+      --md-sys-color-on-primary-container: #21005D;
+      --md-sys-color-secondary: #625B71;
+      --md-sys-color-on-secondary: #FFFFFF;
+      --md-sys-color-secondary-container: #E8DEF8;
+      --md-sys-color-on-secondary-container: #1D192B;
+      --md-sys-color-surface: #FFFBFE;
+      --md-sys-color-on-surface: #1C1B1F;
+      --md-sys-color-surface-variant: #E7E0EC;
+      --md-sys-color-on-surface-variant: #49454F;
+      --md-sys-color-outline: #79747E;
+      --md-sys-color-background: #FFFBFE;
+    }
+    html, body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Roboto', sans-serif;
+      background-color: var(--md-sys-color-background);
+      color: var(--md-sys-color-on-surface);
+      transition: background-color 0.3s, color 0.3s;
+      min-height: 100vh;
+      /* display: flex;
+      flex-direction: column; */
+    }
+    .container {
+      max-width: 800px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 0 15px;
+      flex-grow: 1;
+    }
+    header {
+      background-color: var(--md-sys-color-surface);
+      padding: 15px 0;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      transition: background-color 0.3s;
+    }
+    .header-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .header-content h1 {
+      font-size: 28px;
+      margin: 0;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      color: var(--md-sys-color-primary);
+    }
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 0;
+      background-color: var(--md-sys-color-surface);
+      max-width: 800px;
+      margin: 0 auto;
+      transition: background-color 0.3s;
+    }
+    nav a, .dropdown > span {
+      color: var(--md-sys-color-primary);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 14px;
+      padding: 8px 12px;
+      border-radius: 20px;
+      transition: background-color 0.3s, color 0.3s;
+      cursor: pointer;
+    }
+    nav a:hover, .dropdown > span:hover {
+      background-color: var(--md-sys-color-secondary-container);
+    }
+    .dropdown {
+      position: relative;
+      display: inline-block;
+    }
+    .dropdown-content {
+      display: none;
+      position: absolute;
+      background-color: var(--md-sys-color-surface);
+      min-width: 160px;
+      box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+      z-index: 1;
+      border-radius: 8px;
+      overflow: hidden;
+      padding: 8px 0;
+      margin-top: 8px;
+    }
+    .dropdown-content a {
+      color: var(--md-sys-color-on-surface);
+      padding: 12px 16px;
+      text-decoration: none;
+      display: block;
+      transition: background-color 0.3s;
+      border-radius: 4px;
+      margin: 0 4px;
+    }
+    .dropdown-content a:hover {
+      background-color: var(--md-sys-color-surface-variant);
+    }
+    .dropdown:hover .dropdown-content {
+      display: block;
+    }
+    .profile-info {
+      margin-top: 40px;
+      background-color: var(--md-sys-color-surface);
+      padding: 30px;
+      border-radius: 16px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      transition: background-color 0.3s, box-shadow 0.3s;
+    }
+    .profile-info h2 {
+      color: var(--md-sys-color-primary);
+      margin-top: 0;
+      font-size: 24px;
+      margin-bottom: 20px;
+      border-bottom: 2px solid var(--md-sys-color-primary-container);
+      padding-bottom: 10px;
+    }
+    .profile-info h2 a {
+      color: var(--md-sys-color-primary);
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+    .profile-info h2 a:hover {
+      color: var(--md-sys-color-primary-container);
+    }
+    .profile-info ul {
+      list-style-type: none;
+      padding: 0;
+    }
+    .profile-info li {
+      margin-bottom: 20px;
+      background-color: var(--md-sys-color-surface-variant);
+      padding: 15px;
+      border-radius: 8px;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .profile-info li:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+    }
+    .profile-info a {
+      color: var(--md-sys-color-primary);
+      text-decoration: none;
+      font-weight: 500;
+      display: inline-block;
+      margin-bottom: 10px;
+      transition: color 0.3s;
+      font-size: 18px;
+    }
+    .profile-info a:hover {
+      color: var(--md-sys-color-primary-container);
+    }
+    .profile-info a::before {
+      content: '🔗 ';
+      margin-right: 5px;
+    }
+    .theme-toggle {
+      background: none;
+      border: none;
+      color: var(--md-sys-color-on-surface);
+      cursor: pointer;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      transition: background-color 0.3s;
+    }
+    .theme-toggle:hover {
+      background-color: var(--md-sys-color-surface-variant);
+    }
+    .theme-toggle i {
+      font-size: 24px;
+    }
+    body.dark-theme {
+      --md-sys-color-primary: #D0BCFF;
+      --md-sys-color-on-primary: #381E72;
+      --md-sys-color-primary-container: #4F378B;
+      --md-sys-color-on-primary-container: #EADDFF;
+      --md-sys-color-secondary: #CCC2DC;
+      --md-sys-color-on-secondary: #332D41;
+      --md-sys-color-secondary-container: #4A4458;
+      --md-sys-color-on-secondary-container: #E8DEF8;
+      --md-sys-color-surface: #1C1B1F;
+      --md-sys-color-on-surface: #E6E1E5;
+      --md-sys-color-surface-variant: #49454F;
+      --md-sys-color-on-surface-variant: #CAC4D0;
+      --md-sys-color-outline: #938F99;
+      --md-sys-color-background: #1C1B1F;
+    }
+    .profile-info {
+      animation: fadeIn 0.5s ease-out;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container header-content">
+      <h1><a style="text-decoration: none;" href="index1.html">ASUNNY</a></h1>
+      <button class="theme-toggle" aria-label="Toggle dark mode">
+        <i class="material-icons">light_mode</i>
+      </button>
+    </div>
+  </header>
+
+  <nav>
+    <a href="html作业.html">HTML作业</a>
+    <a href="图标.html">图标坞</a>
+    <a href="http://b.asunny.top/">博客</a>
+    <a href="http://www.asunny.fun/">网盘</a>
+    <div class="dropdown">
+        <span>工具</span>
+        <div class="dropdown-content">
+            <a href="chatgpt添加.html">ChatGPT</a>
+            <a href="https://bing.asunny.top/web/#/">Copilot</a>
+        </div>
+    </div>
+
+</nav>
+
+  <div class="container">
+    <div class="profile-info">
+      <h2>HTML作业列表</h2>
+      <ul>
+        <li>
+          <a href="下拉菜单和注册.html">下拉菜单&注册页</a>
+          <p>实现了响应式的下拉菜单和用户友好的注册页面</p>
+        </li>
+        <li>
+          <a href="demo/轮播图demo.html">轮播图</a>
+          <p>使用HTML、CSS和JavaScript创建的平滑轮播效果</p>
+        </li>
+        <li>
+          <a href="JS项目.html">综合JS项目</a>
+          <p>展示了多个JavaScript技术的综合应用，包括DOM操作和事件处理</p>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <script>
+    // Theme toggle functionality
+    const themeToggle = document.querySelector('.theme-toggle');
+    const themeIcon = themeToggle.querySelector('i');
+    
+    themeToggle.addEventListener('click', () => {
+      document.body.classList.toggle('dark-theme');
+      if (document.body.classList.contains('dark-theme')) {
+        themeIcon.textContent = 'dark_mode';
+      } else {
+        themeIcon.textContent = 'light_mode';
+      }
+    });
+
+    // Add hover effect to list items
+    const listItems = document.querySelectorAll('.profile-info li');
+    listItems.forEach(item => {
+      item.addEventListener('mouseenter', () => {
+        item.style.backgroundColor = 'var(--md-sys-color-primary-container)';
+      });
+      item.addEventListener('mouseleave', () => {
+        item.style.backgroundColor = 'var(--md-sys-color-surface-variant)';
+      });
+    });
+  </script>
+</body>
+</html>

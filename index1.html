@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="UTF-8">
+    <title>asunny</title>
+    <meta content="阿晴的网站" name="Author">
+    <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport">
+    <link href="https://buliangfabuye.com/favicon.ico" rel="favicon">
+    <link href="css/index1.css" rel="stylesheet" type="text/css">
+    <link href="css/style.css" rel="stylesheet" type="text/css">
+    <style>
+        /*  画廊样式 */
+        .gallery {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .gallery-container {
+            display: flex;
+            justify-content: center;
+            padding: 20px;
+            margin-top: auto; /* 将画廊放置在页面底部 */
+        }
+        .gallery-item {
+            width: 100px;
+            text-align: center;
+            transition: transform 0.2s;
+        }
+        .gallery-item img {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            cursor: pointer;
+            border-radius: 10px;
+            transition: transform 0.2s;
+        }
+        .gallery-item img:hover {
+            transform: scale(1.1);
+        }
+        .gallery-item p {
+            margin: 5px 0 0 0;
+            font-size: 12px;
+        }
+        .admin-controls {
+           /* 显示添加图片按钮 ：block */
+            display: none;
+            margin-top: 20px;
+            text-align: center;
+        }
+        .admin-controls input, .admin-controls button {
+            margin: 5px;
+        }
+        /* 画廊css样式 */
+        .gallery img{
+            /* width: 60%;
+            height: 60%; */
+            padding: 10px;
+        }
+
+    </style>
+</head>
+
+<body>
+    <div id="all">
+        <div class="wrapper">
+            <div class="main">
+                <h1>ASUNNY</h1>
+                <div class="content">
+                    <div class="content-top" id="content-top">
+                       <div id="content-text">
+                            </div>
+                        
+                            <button  style="float:left;" onclick="changeContentleft()"><</button>
+                            <button style="float:right;" onclick="changeContentright()">></button>
+                            <br>
+                        </div>
+                </div>
+            
+
+                <div class="gallery-container">
+                    
+                    <div class="gallery" id="gallery"></div>
+                    
+                </div>
+                <p class="footer">
+                    <!-- <a >更多项目</a> -->
+                    <a href="https://qm.qq.com/q/t9NWzRRtCi" target="_blank">
+                        <img
+                        alt="联系我🌙"
+                        border="0"
+                        height="30"
+                        src="https://asunny-1314135129.cos.ap-guangzhou.myqcloud.com/%E5%9B%BE%E6%A0%87/altqq.icon.png"
+                        title="QQ联系我🌙" width="30"></a>
+                        <br>
+                    <a href="index.html" target="_blank">返回首页</a>
+                    <a href="index1.html" target="_blank">新版布局</a>
+                    
+                </p>
+                
+                <div class="admin-controls" id="adminControls">
+                    <label for="imageUrl">图片url</label>
+                    <input type="text" id="imageUrl" placeholder="图片URL">
+                    <label for="linkUrl">链接url</label>
+                    <input type="text" id="linkUrl" placeholder="链接URL">
+                    <label for="description">图片描述</label>
+                    <input type="text" id="description" placeholder="图片描述">
+                    <button onclick="addImage()">添加图片</button>
+                </div>
+            </div> 
+        </div>
+    </div>
+    <script>
+        let i = localStorage.getItem('pageState') ? parseInt(localStorage.getItem('pageState')) : 1;
+
+        function page() {
+            const contentText = document.getElementById('content-text');
+            if (i % 2 === 0) {
+                contentText.innerHTML = `
+                    <h2><a href="./作业展示/index.html">html作业</h2>   </h2>
+                    <ul>
+                        <li>
+                            <a href="下拉菜单和注册.html">下拉菜单&注册页</a><br>
+                            <a href="demo/轮播图demo.html">轮播图</a><br>
+                            <a href="JS项目.html">综合JS项目</a>
+                        </li>
+                    </ul>
+                `;
+            } else {
+                contentText.innerHTML = `
+                    <h2>图标坞</h2>
+                    <ul>
+                        <li>
+                            <a href="https://getquicker.net/Guides/Guide?id=52593d69-c99a-4367-8b98-08d9a65be47e&step=3e46ee2a-77c0-4479-0c2b-08dc35ad6871">瓜皮图标坞</a>
+                            <a href="图标0.html">文件类图标 ①</a><br>
+                            <a href="图标1.html">文件类图标 ②</a><br>
+                            <a href=""></a><br>
+                        </li>
+                    </ul>
+                `;
+            }
+        }
+
+        function changeContentleft() {
+            i++;
+            localStorage.setItem('pageState', i);
+            page();
+        }
+
+        function changeContentright() {
+            i++;
+            localStorage.setItem('pageState', i);
+            page();
+        }
+
+        // 初始化
+        page();
+    </script>
+        <script>
+            // 画廊脚本
+            const gallery = document.getElementById('gallery');
+            const adminControls = document.getElementById('adminControls');
+    
+            // 初始画廊数据
+            const initialImages = [
+                { imageUrl: "https://asunny-1314135129.cos.ap-guangzhou.myqcloud.com/img/logo2.png", linkUrl: "http://www.asunny.fun/", description: "阿晴的网盘"},
+                { imageUrl: "https://asunny-1314135129.cos.ap-guangzhou.myqcloud.com/img/asunny%E9%BB%91%E8%BE%B9.png", linkUrl: "http://b.asunny.top/", description: "阿晴的博客"},
+                { imageUrl: "https://asunny-1314135129.cos.ap-guangzhou.myqcloud.com/img/welink.icon.png", linkUrl: "https://rj2306.asunny.top" ,description: "软件2306实训项目"},
+                { imageUrl: "https://asunny-1314135129.cos.ap-guangzhou.myqcloud.com/img/19_%E6%8A%A0%E5%9B%BE.png", linkUrl: "https://bing.asunny.top/web/#/" ,description: "免费直连访问Copilot"},
+                { imageUrl: "https://asunny-1314135129.cos.ap-guangzhou.myqcloud.com/img/slack.ico", 
+                linkUrl: "https://slack.com/oauth/v2/authorize?client_id=5275409334949.7396159868339&scope=app_mentions:read,channels:history,chat:write,commands,groups:history,im:history,mpim:history,users:read&user_scope=&state=A07BN4PRJ9Z" ,
+                description: "免费直连的chatgpt3.5(需要slack账号)" },
+            ];
+    
+            function loadGallery() {
+                initialImages.forEach(image => {
+                    createGalleryItem(image.imageUrl, image.linkUrl, image.description);
+                });
+            }
+    
+            function createGalleryItem(imageUrl, linkUrl, description) {
+                const galleryItem = document.createElement('div');
+                galleryItem.classList.add('gallery-item');
+                
+                const link = document.createElement('a');
+                link.href = linkUrl;
+                
+                const img = document.createElement('img');
+                img.src = imageUrl;
+                
+                const desc = document.createElement('p');
+                desc.textContent = description;
+                
+                link.appendChild(img);
+                galleryItem.appendChild(link);
+                galleryItem.appendChild(desc);
+                gallery.appendChild(galleryItem);
+            }
+    
+            function addImage() {
+                const imageUrl = document.getElementById('imageUrl').value;
+                const linkUrl = document.getElementById('linkUrl').value;
+                const description = document.getElementById('description').value;
+    
+                if (imageUrl && linkUrl && description) {
+                    createGalleryItem(imageUrl, linkUrl, description);
+                    initialImages.push({ imageUrl, linkUrl, description });
+    
+                    document.getElementById('imageUrl').value = '';
+                    document.getElementById('linkUrl').value = '';
+                    document.getElementById('description').value = '';
+                } else {
+                    alert('请填写图片URL、链接URL和图片描述');
+                }
+            }
+    
+            function toggleAdminControls() {
+                adminControls.style.display = adminControls.style.display === 'none' ? 'block' : 'none';
+            }
+    
+            // 初始化
+            window.onload = function() {
+                loadGallery();
+    
+                // 仅在需要时启用以下行，模拟管理员模式
+                // toggleAdminControls();
+            };
+        </script>
+        
+</body>
+
+</html>
