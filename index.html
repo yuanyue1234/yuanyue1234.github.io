@@ -428,6 +428,7 @@
             --md-sys-color-background: #1C1B1F;
         }
             /* 添加到你的现有样式中 */
+/* CSS 动画 */
 @keyframes fadeInUp {
   0% {
     opacity: 0;
@@ -440,15 +441,27 @@
 }
 
 .fade-in-up {
+  visibility: hidden;
   opacity: 0;
+  will-change: opacity, transform;
+}
+
+.fade-in-up.visible {
+  visibility: visible;
   animation: fadeInUp 0.6s ease-out forwards;
 }
 
-/* 例如，你可以为profile 添加动画效果 */
-.profile {
-  animation: fadeInUp 0.6s ease-out forwards;
-}
-    </style>
+
+  </style>
+  <!-- JavaScript 代码 -->
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    const elements = document.querySelectorAll('.fade-in-up');
+    elements.forEach(element => {
+      element.classList.add('visible');
+    });
+  });
+</script>
 </head>
 
 <body>
