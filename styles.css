@@ -29,7 +29,6 @@ html, body {
     max-width: 800px;
     width: 100%;
     margin: 0 auto;
-    padding: 0 15px;
 }
 
 header {
@@ -86,7 +85,7 @@ nav a:hover,
 
 .dropdown {
     position: relative;
-    margin-right: 20px;
+    /* margin-right: 20px; */
     display: inline-block;
 }
 
@@ -127,6 +126,8 @@ nav a:hover,
 
 .profile-header {
     position: relative;
+    padding-left: 10px;
+    padding-right: 10px;
 }
 
 .carousel {
@@ -155,6 +156,7 @@ nav a:hover,
     width: 100%;
     height: 100%;
     object-fit: cover;
+    
 }
 
 .carousel-nav {
@@ -230,6 +232,8 @@ nav a:hover,
 
 .profile-info {
     margin-top: 40px;
+    margin-right: 10px;
+    margin-left: 10px;
     background-color: var(--md-sys-color-surface);
     padding: 30px;
     border-radius: 16px;
@@ -320,6 +324,9 @@ nav a:hover,
 
 .showcase {
     margin-top:20px;
+    margin-bottom: 0px;
+    margin-left: 10px;
+    margin-right: 10px;
     background-color: var(--md-sys-color-surface);
     border-radius: 12px;
     overflow: hidden;
@@ -334,17 +341,17 @@ nav a:hover,
 
 .showcase-item img {
     width: 150px;
+    padding: 0px;
+    margin-bottom: 10px;
     height: 150px;
     border: 10px solid #fff;
-    margin-right: 20px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     border-radius: 20px;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .showcase-item:hover img {
-    transform: scale(1.05);
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
 }
 
 .showcase-item:last-child {
@@ -384,6 +391,7 @@ nav a:hover,
     height: 40px;
     border-radius: 50%;
     transition: background-color 0.3s;
+    margin-right: 8px;
 }
 
 .theme-toggle:hover {
