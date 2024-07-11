@@ -207,12 +207,34 @@
     .profile-info {
       animation: fadeIn 0.5s ease-out;
     }
+    /* 添加到你的现有样式中 */
+@keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in-up {
+  opacity: 0;
+  animation: fadeInUp 0.6s ease-out forwards;
+}
+
+/* 例如，你可以为profile 添加动画效果 */
+.profile {
+  animation: fadeInUp 0.6s ease-out forwards;
+}
+
   </style>
 </head>
 <body>
   <header>
     <div class="container header-content">
-      <h1><a style="text-decoration: none;" href="index1.html">ASUNNY</a></h1>
+      <h1><a style="text-decoration: none;" href="index.html">ASUNNY</a></h1>
       <button class="theme-toggle" aria-label="Toggle dark mode">
         <i class="material-icons">light_mode</i>
       </button>
@@ -233,11 +255,11 @@
     </div>
 
 </nav>
-
-  <div class="container">
-    <div class="profile-info">
-      <h2><a href="https://getquicker.net/Guides/Guide?id=52593d69-c99a-4367-8b98-08d9a65be47e&step=3e46ee2a-77c0-4479-0c2b-08dc35ad6871">瓜皮图标坞</a></h2>
-      <ul>
+<div class="container">
+  <div class="fade-in-up">
+  <div class="profile-info">
+    <h2><a href="https://getquicker.net/Guides/Guide?id=52593d69-c99a-4367-8b98-08d9a65be47e&step=3e46ee2a-77c0-4479-0c2b-08dc35ad6871">瓜皮图标坞</a></h2>
+    <ul>
         <li>
           <a href="图标0.html">文件类图标 ①</a>
           <p>精美设计的文件类图标集合，适用于各种文件类型</p>
@@ -253,6 +275,7 @@
       </ul>
     </div>
   </div>
+</div>
 
   <script>
     // Theme toggle functionality
