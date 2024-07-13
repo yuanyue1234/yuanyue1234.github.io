@@ -3,7 +3,8 @@
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
-  <style>    .chatgpt-interface {
+  <style>    
+  .chatgpt-interface {
     margin-top: 40px;
     background-color: var(--md-sys-color-surface);
     padding: 30px;
@@ -25,23 +26,31 @@
     border-radius: 8px;
     padding: 15px;
     margin-bottom: 20px;
+    text-align: center;
   }
-  .chat-input textarea {
+  .chat-window p{
     flex-grow: 1;
-    border: 1px solid var(--md-sys-color-outline);
-    border-radius: 8px;
     padding: 10px;
-    font-family: 'Roboto', sans-serif;
-    font-size: 14px;
+    font-size: 16px;
     resize: vertical;
   }
+  .chat-window img{
+    width: 80px;
+    padding: 0px;
+    margin-bottom: 10px;
+  }
+  .chat-input{
+    text-align: center;
+  }
+
   .chat-input button {
     background-color: var(--md-sys-color-primary);
     color: var(--md-sys-color-on-primary);
     border: none;
     border-radius: 8px;
     padding: 10px 20px;
-    margin-left: 10px;
+    font-size: 18px;
+    /* margin-left: 10px; */
     cursor: pointer;
     transition: background-color 0.3s;
   }
@@ -62,8 +71,6 @@
   <nav>
     <a href="html作业.html">HTML作业</a>
     <a href="图标.html">图标坞</a>
-    <a href="http://b.asunny.top/">博客</a>
-    <a href="http://www.asunny.fun/">网盘</a>
     <div class="dropdown">
         <span>工具</span>
         <div class="dropdown-content">
@@ -71,26 +78,51 @@
             <a href="https://bing.asunny.top/web/#/">Copilot</a>
         </div>
     </div>
-
+    <a href="http://b.asunny.top/">博客</a>
+    <a href="http://www.asunny.fun/">网盘</a>
 </nav>
 
   <div class="container">
     <div class="chatgpt-interface">
       <h2>添加ChatGPT机器人</h2>
       <div class="chat-window" id="chatWindow">
-        <img src="https://asunny-1314135129.cos.ap-guangzhou.myqcloud.com/img/20240711_104917_627_copy.png"/>
-        <p>这是一个slack机器人</p>
-        <p>你需要有一个slack账号</p>
-        <p>然后点击下面的按钮添加机器人</p>
-        <p>即可以畅通无阻的访问免费的ChatGPT</p>
-        <br>
-        <form class="chat-input" id="chatForm">
+        <img src="https://asunny-1314135129.cos.ap-guangzhou.myqcloud.com/img/slack.ico"/>
+        <p>这是我创建的slack机器人</p>
+        <p>可以畅通无阻的访问免费的ChatGPT</p>
+        <p>但您需要有一个slack账号</p>
+        <p>然后点击下面的按钮添加机器人即可</p>
+        <!-- <br> -->
+        <div class="chat-input" id="chatForm">
         <button type="submit"><a style="color: white; text-decoration: none" href="https://slack.com/oauth/v2/authorize?client_id=5275409334949.7396159868339&scope=app_mentions:read,channels:history,chat:write,commands,groups:history,im:history,mpim:history,users:read&user_scope=&state=A07BN4PRJ9Z">添加</a></button>
-      </form>
+      </div>
       </div>
 
     </div>
   </div>
+  <script>
+    // Theme toggle functionality
+    const themeToggle = document.querySelector('.theme-toggle');
+    const themeIcon = themeToggle.querySelector('i');
+    
+    themeToggle.addEventListener('click', () => {
+      document.body.classList.toggle('dark-theme');
+      if (document.body.classList.contains('dark-theme')) {
+        themeIcon.textContent = 'dark_mode';
+      } else {
+        themeIcon.textContent = 'light_mode';
+      }
+    });
 
+    // Add hover effect to list items
+    const listItems = document.querySelectorAll('.profile-info li');
+    listItems.forEach(item => {
+      item.addEventListener('mouseenter', () => {
+        item.style.backgroundColor = 'var(--md-sys-color-primary-container)';
+      });
+      item.addEventListener('mouseleave', () => {
+        item.style.backgroundColor = 'var(--md-sys-color-surface-variant)';
+      });
+    });
+  </script>
 </body>
 </html>
