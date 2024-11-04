@@ -1,73 +1,144 @@
-// Theme toggle functionality
-const themeToggle = document.querySelector('.theme-toggle');
-const themeIcon = themeToggle.querySelector('i');
+function initCarousel() {
+    const carousel = document.querySelector('.carousel');
+    const items = carousel.querySelectorAll('.carousel-item');
+    const nav = carousel.querySelector('.carousel-nav');
+    
+    // 自动生成导航点
+    items.forEach((_, index) => {
+        const dot = document.createElement('span');
+        dot.className = `carousel-nav-item ${index === 0 ? 'active' : ''}`;
+        dot.addEventListener('click', () => showSlide(index));
+        nav.appendChild(dot);
+    });
 
-themeToggle.addEventListener('click', () => {
-    document.body.classList.toggle('dark-theme');
-    if (document.body.classList.contains('dark-theme')) {
-        themeIcon.textContent = 'dark_mode';
-    } else {
-        themeIcon.textContent = 'light_mode';
+    let currentSlide = 0;
+
+    function showSlide(index) {
+        // 隐藏所有幻灯片
+        items.forEach(item => item.classList.remove('active'));
+        // 取消所有导航点的激活状态
+        nav.querySelectorAll('.carousel-nav-item').forEach(dot => dot.classList.remove('active'));
+        
+        // 显示当前幻灯片
+        items[index].classList.add('active');
+        nav.children[index].classList.add('active');
+        currentSlide = index;
     }
-});
 
-// Carousel functionality
-const carousel = document.querySelector('.carousel');
-const carouselItems = carousel.querySelectorAll('.carousel-item');
-const carouselNavItems = carousel.querySelectorAll('.carousel-nav-item');
-const prevBtn = carousel.querySelector('.prev');
-const nextBtn = carousel.querySelector('.next');
-let currentIndex = 0;
+    function nextSlide() {
+        showSlide((currentSlide + 1) % items.length);
+    }
 
-function showSlide(index) {
-    carouselItems.forEach(item => item.classList.remove('active'));
-    carouselNavItems.forEach(item => item.classList.remove('active'));
-    carouselItems[index].classList.add('active');
-    carouselNavItems[index].classList.add('active');
+    function prevSlide() {
+        showSlide((currentSlide - 1 + items.length) % items.length);
+    }
+
+    // 添加按钮事件监听
+    carousel.querySelector('.prev').addEventListener('click', prevSlide);
+    carousel.querySelector('.next').addEventListener('click', nextSlide);
 }
 
-function nextSlide() {
-    currentIndex = (currentIndex + 1) % carouselItems.length;
-    showSlide(currentIndex);
+// 页面加载完成后初始化轮播图
+document.addEventListener('DOMContentLoaded', function() {
+    initCarousel();
+    generateTOC();
+    initTheme();
+});
+
+// 分离主题初始化函数
+function initTheme() {
+    const themeToggle = document.querySelector('.theme-toggle');
+    const icon = themeToggle.querySelector('i');
+    
+    // 检查本地存储中的主题设置
+    if (localStorage.getItem('theme') === 'dark') {
+        document.body.classList.add('dark-theme');
+        icon.textContent = 'dark_mode';
+    } else {
+        document.body.classList.remove('dark-theme');
+        icon.textContent = 'light_mode';
+    }
+    
+    // 切换主题
+    themeToggle.addEventListener('click', () => {
+        document.body.classList.toggle('dark-theme');
+        const isDark = document.body.classList.contains('dark-theme');
+        localStorage.setItem('theme', isDark ? 'dark' : 'light');
+        icon.textContent = isDark ? 'dark_mode' : 'light_mode';
+    });
 }
 
-function prevSlide() {
-    currentIndex = (currentIndex - 1 + carouselItems.length) % carouselItems.length;
-    showSlide(currentIndex);
+// 修改 generateTOC 函数
+function generateTOC() {
+    const toc = document.getElementById('toc');
+    const headings = document.querySelectorAll('h2, h3');
+    const tocLinks = [];
+
+    headings.forEach(heading => {
+        if (!heading.id) {
+            heading.id = heading.textContent.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+        }
+        
+        const link = document.createElement('a');
+        link.href = `#${heading.id}`;
+        link.textContent = heading.textContent;
+        
+        if (heading.tagName === 'H3') {
+            link.classList.add('h3-link');
+        }
+        
+        link.addEventListener('click', (e) => {
+            e.preventDefault();
+            heading.scrollIntoView({ behavior: 'smooth' });
+            // 更新 URL，但不触发滚动
+            history.pushState(null, '', link.href);
+        });
+        
+        toc.appendChild(link);
+        tocLinks.push({
+            link: link,
+            heading: heading
+        });
+    });
+
+    // 添加滚动监听
+    let ticking = false;
+    window.addEventListener('scroll', () => {
+        if (!ticking) {
+            window.requestAnimationFrame(() => {
+                highlightCurrentSection(tocLinks);
+                ticking = false;
+            });
+            ticking = true;
+        }
+    });
+
+    // 初始检查 URL 中的锚点
+    if (window.location.hash) {
+        const targetHeading = document.querySelector(window.location.hash);
+        if (targetHeading) {
+            setTimeout(() => {
+                targetHeading.scrollIntoView({ behavior: 'smooth' });
+            }, 100);
+        }
+    }
 }
 
-nextBtn.addEventListener('click', nextSlide);
-prevBtn.addEventListener('click', prevSlide);
+// 修改高亮当前部分的函数
+function highlightCurrentSection(tocLinks) {
+    const scrollPos = window.scrollY + 100;
 
-carouselNavItems.forEach((item, index) => {
-    item.addEventListener('click', () => {
-        currentIndex = index;
-        showSlide(currentIndex);
-    });
-});
+    // 移除所有活动类
+    tocLinks.forEach(({link}) => link.classList.remove('active'));
 
-// Auto-rotate carousel
-setInterval(nextSlide, 5000);
-
-// Wait for the page to load before applying the animation
-window.addEventListener('load', () => {
-    document.querySelectorAll('.fade-in-up').forEach(element => {
-        element.classList.add('visible');
-    });
-});
-
-// Image Viewer functionality
-const imageViewer = document.getElementById('image-viewer');
-const viewerImage = document.getElementById('viewer-image');
-const closeBtn = document.getElementById('close-btn');
-
-document.querySelectorAll('.clickable').forEach(image => {
-    image.addEventListener('click', () => {
-        viewerImage.src = image.src;
-        imageViewer.classList.remove('hidden');
-    });
-});
-
-closeBtn.addEventListener('click', () => {
-    imageViewer.classList.add('hidden');
-});
+    // 找到当前可见的标题
+    for (let i = tocLinks.length - 1; i >= 0; i--) {
+        const {link, heading} = tocLinks[i];
+        if (heading.offsetTop <= scrollPos) {
+            link.classList.add('active');
+            // 更新 URL，但不触发滚动
+            history.replaceState(null, '', `#${heading.id}`);
+            break;
+        }
+    }
+}
