@@ -1,0 +1,2111 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="袁越的软件开发作品集：微信小程序、Windows 桌面工具、Python 数据爬虫、Django + Vue3 前后端分离项目。">
+  <title>袁越 · 软件开发作品集 v3</title>
+  <style>
+    :root {
+      --canvas: #101010;
+      --canvas-deep: #080909;
+      --canvas-soft: #181a19;
+      --panel: #121413;
+      --panel-2: #191c1b;
+      --primary: #00d992;
+      --primary-soft: #2fd6a1;
+      --primary-dim: rgba(0, 217, 146, 0.14);
+      --ink: #f2f2f2;
+      --ink-strong: #ffffff;
+      --body: #bdbdbd;
+      --muted: #818b93;
+      --hairline: #3d3a39;
+      --hairline-soft: rgba(255, 255, 255, 0.1);
+      --danger: #ff6b87;
+      --radius-card: 8px;
+      --radius-control: 6px;
+      --shadow-glow: 0 0 32px rgba(0, 217, 146, 0.16);
+      --sans: Inter, "Segoe UI", "Microsoft YaHei", sans-serif;
+      --mono: "SF Mono", "Cascadia Mono", Consolas, monospace;
+      --max: 1280px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      background: var(--canvas);
+    }
+
+    body {
+      min-height: 100dvh;
+      margin: 0;
+      color: var(--ink);
+      font-family: var(--sans);
+      background:
+        radial-gradient(circle at var(--mx, 52%) var(--my, 12%), rgba(0, 217, 146, 0.11), transparent 26rem),
+        linear-gradient(180deg, #101010 0%, #0b0c0c 46%, #101010 100%);
+      letter-spacing: 0;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      pointer-events: none;
+      content: "";
+      opacity: 0.28;
+      background-image:
+        linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
+      background-size: 56px 56px;
+      mask-image: linear-gradient(180deg, black 0%, transparent 72%);
+    }
+
+    body::after {
+      position: fixed;
+      inset: 0;
+      z-index: 20;
+      pointer-events: none;
+      content: "";
+      opacity: 0.045;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 160 160' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      mix-blend-mode: screen;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+    }
+
+    button,
+    summary {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    .skip-link {
+      position: fixed;
+      top: 12px;
+      left: 12px;
+      z-index: 100;
+      padding: 10px 14px;
+      color: #05100c;
+      background: var(--primary);
+      border-radius: var(--radius-control);
+      transform: translateY(-160%);
+      transition: transform 180ms ease;
+    }
+
+    .skip-link:focus {
+      transform: translateY(0);
+    }
+
+    .progress {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 90;
+      width: var(--scroll, 0%);
+      height: 2px;
+      background: var(--primary);
+      box-shadow: 0 0 18px rgba(0, 217, 146, 0.6);
+    }
+
+    @media (pointer: fine) {
+      body,
+      a,
+      button,
+      summary,
+      .skill-card,
+      .project-tab,
+      .dot {
+        cursor: none;
+      }
+    }
+
+    .cursor-light {
+      position: fixed;
+      left: 0;
+      top: 0;
+      z-index: 120;
+      display: none;
+      width: 9px;
+      height: 9px;
+      pointer-events: none;
+      border-radius: 999px;
+      background: #fff;
+      mix-blend-mode: difference;
+      transform: translate3d(var(--cursor-x, 18px), var(--cursor-y, 18px), 0) translate(-50%, -50%);
+      transition: width 180ms ease, height 180ms ease, box-shadow 180ms ease, opacity 180ms ease;
+    }
+
+    @media (pointer: fine) {
+      .cursor-light {
+        display: block;
+      }
+    }
+
+    .cursor-light::after {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: var(--absorb-w, 24px);
+      height: var(--absorb-h, 24px);
+      content: "";
+      border: 1px solid rgba(255, 255, 255, 0.35);
+      border-radius: var(--absorb-r, 999px);
+      opacity: 0.65;
+      transform: translate(-50%, -50%);
+      transition: width 180ms ease, height 180ms ease, border-radius 180ms ease, opacity 180ms ease;
+    }
+
+    .cursor-light.is-link {
+      width: 12px;
+      height: 12px;
+      box-shadow: 0 0 24px rgba(255, 255, 255, 0.34);
+    }
+
+    .cursor-light.is-absorbed {
+      mix-blend-mode: normal;
+      box-shadow:
+        0 0 0 5px rgba(255, 255, 255, 0.055),
+        0 0 30px rgba(255, 255, 255, 0.24);
+    }
+
+    .cursor-light.is-pressed {
+      width: 7px;
+      height: 7px;
+      box-shadow: 0 0 0 9px rgba(255, 255, 255, 0.08);
+    }
+
+    .physics-card {
+      --rx: 0deg;
+      --ry: 0deg;
+      --tz: 0px;
+      --glare-x: 50%;
+      --glare-y: 50%;
+      --shadow-x: 0px;
+      --shadow-y: 18px;
+      position: relative;
+      overflow: hidden;
+      transform: perspective(900px) rotateX(var(--rx)) rotateY(var(--ry)) translate3d(0, 0, var(--tz));
+      transform-style: preserve-3d;
+      will-change: transform, box-shadow;
+      box-shadow:
+        calc(var(--shadow-x) * 0.35) calc(var(--shadow-y) * 0.55) 42px rgba(0, 0, 0, 0.24),
+        inset 0 1px 0 rgba(255, 255, 255, 0.04);
+      transition: border-color 220ms ease, background 220ms ease, box-shadow 220ms ease;
+    }
+
+    .physics-card::before {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      content: "";
+      pointer-events: none;
+      opacity: 0;
+      border-radius: inherit;
+      background:
+        radial-gradient(circle at var(--glare-x) var(--glare-y), rgba(255, 255, 255, 0.18), rgba(255, 255, 255, 0.05) 18%, transparent 42%),
+        linear-gradient(135deg, rgba(255, 255, 255, 0.06), transparent 38%, rgba(255, 255, 255, 0.03));
+      transition: opacity 220ms ease;
+    }
+
+    .physics-card.is-tilting {
+      border-color: rgba(0, 217, 146, 0.5);
+      box-shadow:
+        calc(var(--shadow-x) * 0.75) calc(var(--shadow-y) * 1.1) 70px rgba(0, 0, 0, 0.46),
+        0 0 0 1px rgba(0, 217, 146, 0.08),
+        inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    }
+
+    .physics-card.is-tilting::before {
+      opacity: 1;
+    }
+
+    .physics-card > * {
+      position: relative;
+      z-index: 1;
+    }
+
+    .site-shell {
+      width: min(100%, var(--max));
+      margin: 0 auto;
+      padding: 0 28px 72px;
+    }
+
+    .top-nav {
+      position: sticky;
+      top: 0;
+      z-index: 80;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      min-height: 74px;
+      border-bottom: 1px solid var(--hairline);
+      background: rgba(16, 16, 16, 0.82);
+      backdrop-filter: blur(18px);
+    }
+
+    .brand-mark {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+    }
+
+    .mark-symbol {
+      width: 34px;
+      height: 34px;
+      border: 1px solid rgba(0, 217, 146, 0.58);
+      border-radius: 8px;
+      object-fit: cover;
+      object-position: center 28%;
+      background: var(--canvas-soft);
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.04);
+    }
+
+    .brand-copy {
+      display: grid;
+      gap: 2px;
+    }
+
+    .brand-copy strong {
+      color: var(--ink-strong);
+      font-size: 15px;
+      font-weight: 650;
+    }
+
+    .brand-copy span {
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 11px;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .nav-links a,
+    .ghost-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 38px;
+      padding: 8px 12px;
+      color: var(--body);
+      border: 1px solid transparent;
+      border-radius: var(--radius-control);
+      font-size: 13px;
+      transition: color 180ms ease, border-color 180ms ease, background 180ms ease, transform 180ms ease;
+    }
+
+    .nav-links a:hover,
+    .nav-links a:focus-visible,
+    .ghost-link:hover,
+    .ghost-link:focus-visible {
+      color: var(--ink-strong);
+      border-color: var(--hairline);
+      background: rgba(255, 255, 255, 0.04);
+      outline: none;
+      transform: translateY(-1px);
+    }
+
+    .primary-link,
+    .primary-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 42px;
+      padding: 10px 15px;
+      color: #05100c;
+      background: var(--primary);
+      border: 1px solid var(--primary);
+      border-radius: var(--radius-control);
+      font-size: 14px;
+      font-weight: 700;
+      transition: transform 180ms ease, box-shadow 180ms ease, background 180ms ease;
+    }
+
+    .primary-link:hover,
+    .primary-link:focus-visible,
+    .primary-button:hover,
+    .primary-button:focus-visible {
+      background: var(--primary-soft);
+      box-shadow: var(--shadow-glow);
+      outline: none;
+      transform: translateY(-2px);
+    }
+
+    .primary-link:active,
+    .primary-button:active,
+    .ghost-link:active,
+    .project-tab:active,
+    .filter-chip:active,
+    .dot:active {
+      transform: translateY(1px) scale(0.99);
+    }
+
+    .nav-links a.primary-link {
+      color: #05100c;
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1.02fr) minmax(340px, 0.72fr);
+      gap: 42px;
+      align-items: end;
+      min-height: calc(100dvh - 74px);
+      padding: 84px 0 68px;
+      border-bottom: 1px dashed rgba(79, 93, 117, 0.42);
+    }
+
+    .eyebrow {
+      margin: 0 0 18px;
+      color: var(--primary);
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 2.4px;
+      text-transform: uppercase;
+    }
+
+    .hero h1 {
+      max-width: 860px;
+      margin: 0;
+      color: var(--ink-strong);
+      font-size: 80px;
+      font-weight: 430;
+      line-height: 0.98;
+      letter-spacing: 0;
+      text-wrap: balance;
+    }
+
+    .hero-lead {
+      max-width: 700px;
+      margin: 26px 0 0;
+      color: var(--body);
+      font-size: 18px;
+      line-height: 1.8;
+      text-wrap: pretty;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 32px;
+    }
+
+    .hero-meta {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 1px;
+      margin-top: 48px;
+      border: 1px solid var(--hairline);
+      border-radius: var(--radius-card);
+      overflow: hidden;
+      background: var(--hairline);
+    }
+
+    .meta-cell {
+      padding: 18px;
+      background: rgba(16, 16, 16, 0.96);
+    }
+
+    .meta-cell b {
+      display: block;
+      margin-bottom: 6px;
+      color: var(--ink-strong);
+      font-family: var(--mono);
+      font-size: 24px;
+      font-weight: 650;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .meta-cell span {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .hero-console {
+      position: relative;
+      display: grid;
+      gap: 14px;
+      align-self: center;
+    }
+
+    .console-card {
+      position: relative;
+      padding: 18px;
+      border: 1px solid var(--hairline);
+      border-radius: var(--radius-card);
+      background: rgba(18, 20, 19, 0.86);
+      overflow: hidden;
+      isolation: isolate;
+    }
+
+    .console-card::before {
+      position: absolute;
+      inset: var(--spot-y, 0) auto auto var(--spot-x, 0);
+      z-index: -1;
+      width: 190px;
+      height: 190px;
+      content: "";
+      background: radial-gradient(circle, rgba(0, 217, 146, 0.2), transparent 62%);
+      transform: translate(-50%, -50%);
+      opacity: 0;
+      transition: opacity 180ms ease;
+    }
+
+    .console-card:hover::before {
+      opacity: 1;
+    }
+
+    .console-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 18px;
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 12px;
+    }
+
+    .live-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--primary);
+    }
+
+    .live-pill::before {
+      width: 7px;
+      height: 7px;
+      content: "";
+      border-radius: 999px;
+      background: var(--primary);
+      box-shadow: 0 0 16px rgba(0, 217, 146, 0.7);
+    }
+
+    .stack-line {
+      display: grid;
+      grid-template-columns: 108px 1fr;
+      gap: 14px;
+      padding: 12px 0;
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+      color: var(--body);
+      font-size: 14px;
+      line-height: 1.55;
+    }
+
+    .stack-line:first-of-type {
+      border-top: 0;
+    }
+
+    .stack-line code {
+      color: var(--primary-soft);
+      font-family: var(--mono);
+      font-size: 12px;
+    }
+
+    .mini-map {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+    }
+
+    .mini-node {
+      min-height: 94px;
+      padding: 12px;
+      border: 1px solid var(--hairline);
+      border-radius: var(--radius-card);
+      background: rgba(255, 255, 255, 0.025);
+      transition: border-color 180ms ease, background 180ms ease, transform 180ms ease;
+    }
+
+    .mini-node:hover {
+      border-color: rgba(0, 217, 146, 0.58);
+      background: var(--primary-dim);
+      transform: translateY(-2px);
+    }
+
+    .mini-node b {
+      display: block;
+      margin-bottom: 14px;
+      color: var(--ink-strong);
+      font-size: 13px;
+    }
+
+    .mini-node span {
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 11px;
+    }
+
+    .section {
+      padding: 74px 0;
+      border-bottom: 1px dashed rgba(79, 93, 117, 0.42);
+    }
+
+    .section-head {
+      display: grid;
+      grid-template-columns: minmax(0, 0.78fr) minmax(240px, 0.38fr);
+      gap: 32px;
+      align-items: end;
+      margin-bottom: 34px;
+    }
+
+    .section-head h2 {
+      margin: 0;
+      color: var(--ink-strong);
+      font-size: 44px;
+      font-weight: 430;
+      line-height: 1.08;
+      letter-spacing: 0;
+      text-wrap: balance;
+    }
+
+    .section-head p {
+      margin: 0;
+      color: var(--body);
+      font-size: 15px;
+      line-height: 1.72;
+      text-wrap: pretty;
+    }
+
+    .project-layout {
+      display: grid;
+      grid-template-columns: 360px minmax(0, 1fr);
+      gap: 18px;
+      align-items: start;
+    }
+
+    .project-tabs {
+      position: sticky;
+      top: 92px;
+      display: grid;
+      gap: 10px;
+    }
+
+    .project-tab {
+      position: relative;
+      width: 100%;
+      min-height: 132px;
+      padding: 18px;
+      color: var(--body);
+      text-align: left;
+      border: 1px solid var(--hairline);
+      border-radius: var(--radius-card);
+      background: rgba(18, 20, 19, 0.72);
+      overflow: hidden;
+      transition: border-color 180ms ease, background 180ms ease, transform 180ms ease;
+    }
+
+    .project-tab::after {
+      position: absolute;
+      inset: auto 18px 18px auto;
+      width: 44px;
+      height: 1px;
+      content: "";
+      background: var(--hairline);
+      transition: width 180ms ease, background 180ms ease;
+    }
+
+    .project-tab:hover,
+    .project-tab:focus-visible,
+    .project-tab.active {
+      color: var(--ink);
+      border-color: rgba(0, 217, 146, 0.6);
+      background: linear-gradient(135deg, rgba(0, 217, 146, 0.13), rgba(255, 255, 255, 0.03));
+      outline: none;
+      transform: translateY(-2px);
+    }
+
+    .project-tab.active::after {
+      width: 86px;
+      background: var(--primary);
+    }
+
+    .tab-index {
+      color: var(--primary);
+      font-family: var(--mono);
+      font-size: 12px;
+    }
+
+    .project-tab strong {
+      display: block;
+      margin-top: 18px;
+      color: var(--ink-strong);
+      font-size: 22px;
+      font-weight: 650;
+      line-height: 1.2;
+    }
+
+    .project-tab span {
+      display: block;
+      margin-top: 9px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.55;
+    }
+
+    .project-stage {
+      min-width: 0;
+      border: 1px solid var(--hairline);
+      border-radius: var(--radius-card);
+      background: rgba(13, 14, 14, 0.84);
+      overflow: hidden;
+    }
+
+    .project-panel {
+      display: none;
+    }
+
+    .project-panel.active {
+      display: block;
+      animation: panelIn 420ms cubic-bezier(.2, .8, .2, 1);
+    }
+
+    @keyframes panelIn {
+      from {
+        opacity: 0;
+        transform: translateY(12px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .panel-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 0.9fr) minmax(360px, 0.74fr);
+      min-height: 650px;
+    }
+
+    .panel-copy {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+      padding: 42px;
+      border-right: 1px solid var(--hairline);
+    }
+
+    .panel-copy h3 {
+      margin: 0;
+      color: var(--ink-strong);
+      font-size: 50px;
+      font-weight: 450;
+      line-height: 1.05;
+      letter-spacing: 0;
+      text-wrap: balance;
+    }
+
+    .panel-copy .desc {
+      margin: 0;
+      max-width: 650px;
+      color: var(--body);
+      font-size: 16px;
+      line-height: 1.78;
+      text-wrap: pretty;
+    }
+
+    .tag-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      min-height: 28px;
+      padding: 5px 9px;
+      color: var(--body);
+      border: 1px solid var(--hairline);
+      border-radius: 999px;
+      font-size: 12px;
+      white-space: nowrap;
+      background: rgba(255, 255, 255, 0.025);
+    }
+
+    .tag.green {
+      color: var(--primary);
+      border-color: rgba(0, 217, 146, 0.36);
+      background: rgba(0, 217, 146, 0.08);
+    }
+
+    .proof-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 1px;
+      border: 1px solid var(--hairline);
+      border-radius: var(--radius-card);
+      overflow: hidden;
+      background: var(--hairline);
+    }
+
+    .proof {
+      min-height: 118px;
+      padding: 16px;
+      background: rgba(16, 16, 16, 0.94);
+    }
+
+    .proof b {
+      display: block;
+      color: var(--ink-strong);
+      font-family: var(--mono);
+      font-size: 20px;
+      font-weight: 650;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .proof span {
+      display: block;
+      margin-top: 10px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .detail-stack {
+      display: grid;
+      gap: 10px;
+    }
+
+    details {
+      border: 1px solid var(--hairline);
+      border-radius: var(--radius-card);
+      background: rgba(255, 255, 255, 0.025);
+    }
+
+    details[open] {
+      border-color: rgba(0, 217, 146, 0.48);
+      background: rgba(0, 217, 146, 0.055);
+    }
+
+    summary {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 14px 16px;
+      color: var(--ink-strong);
+      cursor: pointer;
+      list-style: none;
+      font-weight: 650;
+    }
+
+    summary::-webkit-details-marker {
+      display: none;
+    }
+
+    summary::after {
+      content: "+";
+      color: var(--primary);
+      font-family: var(--mono);
+      font-size: 18px;
+    }
+
+    details[open] summary::after {
+      content: "-";
+    }
+
+    .detail-body {
+      padding: 0 16px 16px;
+      color: var(--body);
+      font-size: 14px;
+      line-height: 1.72;
+    }
+
+    .detail-body ul {
+      display: grid;
+      gap: 8px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .detail-body li {
+      position: relative;
+      padding-left: 16px;
+    }
+
+    .detail-body li::before {
+      position: absolute;
+      top: 0.72em;
+      left: 0;
+      width: 5px;
+      height: 5px;
+      content: "";
+      border-radius: 999px;
+      background: var(--primary);
+    }
+
+    .panel-media {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+      background:
+        linear-gradient(180deg, rgba(0, 217, 146, 0.08), transparent 32%),
+        #0d0e0e;
+    }
+
+    .media-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 18px;
+      color: var(--muted);
+      border-bottom: 1px solid var(--hairline);
+      font-family: var(--mono);
+      font-size: 12px;
+    }
+
+    .shot-window {
+      position: relative;
+      display: grid;
+      flex: 1;
+      place-items: center;
+      min-height: 500px;
+      padding: 30px;
+      overflow: hidden;
+    }
+
+    .shot {
+      display: none;
+      width: min(100%, 420px);
+      max-height: 560px;
+      object-fit: contain;
+      border: 1px solid rgba(255, 255, 255, 0.13);
+      border-radius: 8px;
+      background: var(--canvas-soft);
+      box-shadow: 0 20px 70px rgba(0, 0, 0, 0.52);
+    }
+
+    .shot.active {
+      display: block;
+      animation: imageIn 360ms ease;
+    }
+
+    .phone-shot {
+      width: min(74%, 310px);
+      max-height: 590px;
+      border-radius: 34px;
+      box-shadow:
+        0 0 0 9px #2e3030,
+        0 0 0 10px rgba(255, 255, 255, 0.18),
+        0 22px 72px rgba(0, 0, 0, 0.72);
+    }
+
+    .browser-shot {
+      width: min(96%, 560px);
+      max-height: 410px;
+      border-radius: 8px;
+    }
+
+    .mousepointer-brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: -4px;
+    }
+
+    .mousepointer-brand img {
+      width: 48px;
+      height: 48px;
+      border: 1px solid rgba(0, 217, 146, 0.36);
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.04);
+      padding: 6px;
+    }
+
+    .mousepointer-brand span {
+      display: block;
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 12px;
+      line-height: 1.45;
+    }
+
+    .window-dots {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .window-dots i {
+      width: 7px;
+      height: 7px;
+      border: 1px solid rgba(255, 255, 255, 0.36);
+      border-radius: 999px;
+    }
+
+    .mouse-shot {
+      width: min(96%, 620px);
+      max-height: 410px;
+      object-fit: contain;
+      padding-top: 22px;
+      border-radius: 10px;
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.09) 0 22px, transparent 22px),
+        #eef2f6;
+      box-shadow:
+        0 0 0 1px rgba(255, 255, 255, 0.13),
+        0 22px 72px rgba(0, 0, 0, 0.62);
+    }
+
+    @keyframes imageIn {
+      from {
+        opacity: 0;
+        transform: scale(0.985);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    .carousel-controls {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 18px;
+      border-top: 1px solid var(--hairline);
+    }
+
+    .dot-row {
+      display: flex;
+      gap: 8px;
+    }
+
+    .dot {
+      width: 34px;
+      height: 28px;
+      color: transparent;
+      border: 1px solid var(--hairline);
+      border-radius: var(--radius-control);
+      background: rgba(255, 255, 255, 0.04);
+      transition: border-color 180ms ease, background 180ms ease, transform 180ms ease;
+    }
+
+    .dot.active,
+    .dot:hover,
+    .dot:focus-visible {
+      border-color: var(--primary);
+      background: rgba(0, 217, 146, 0.22);
+      outline: none;
+    }
+
+    .project-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .filter-strip {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 18px;
+    }
+
+    .filter-chip {
+      min-height: 36px;
+      padding: 8px 12px;
+      color: var(--body);
+      border: 1px solid var(--hairline);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.025);
+      font-size: 13px;
+      transition: border-color 180ms ease, color 180ms ease, background 180ms ease, transform 180ms ease;
+    }
+
+    .filter-chip.active,
+    .filter-chip:hover,
+    .filter-chip:focus-visible {
+      color: #05100c;
+      border-color: var(--primary);
+      background: var(--primary);
+      outline: none;
+    }
+
+    .skill-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .skill-card {
+      position: relative;
+      min-height: 212px;
+      padding: 20px;
+      border: 1px solid var(--hairline);
+      border-radius: var(--radius-card);
+      background: rgba(18, 20, 19, 0.78);
+      overflow: hidden;
+      transition: border-color 180ms ease, transform 180ms ease, background 180ms ease, opacity 180ms ease;
+    }
+
+    .skill-card.hidden {
+      display: none;
+    }
+
+    .skill-card::before {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      content: "";
+      background: linear-gradient(90deg, var(--primary), transparent);
+      transform: scaleX(0.18);
+      transform-origin: left;
+      transition: transform 180ms ease;
+    }
+
+    .skill-card:hover {
+      border-color: rgba(0, 217, 146, 0.5);
+      background: rgba(0, 217, 146, 0.06);
+      transform: translateY(-4px);
+    }
+
+    .skill-card:hover::before {
+      transform: scaleX(1);
+    }
+
+    .skill-card .skill-kicker {
+      color: var(--primary);
+      font-family: var(--mono);
+      font-size: 12px;
+    }
+
+    .skill-card h3 {
+      margin: 24px 0 12px;
+      color: var(--ink-strong);
+      font-size: 22px;
+      line-height: 1.2;
+    }
+
+    .skill-card p {
+      margin: 0;
+      color: var(--body);
+      font-size: 14px;
+      line-height: 1.68;
+      text-wrap: pretty;
+    }
+
+    .timeline {
+      display: grid;
+      grid-template-columns: minmax(0, 0.72fr) minmax(320px, 0.38fr);
+      gap: 18px;
+    }
+
+    .timeline-card,
+    .contact-card {
+      padding: 24px;
+      border: 1px solid var(--hairline);
+      border-radius: var(--radius-card);
+      background: rgba(18, 20, 19, 0.76);
+    }
+
+    .timeline-card h3,
+    .contact-card h3 {
+      margin: 0 0 14px;
+      color: var(--ink-strong);
+      font-size: 24px;
+    }
+
+    .timeline-list {
+      display: grid;
+      gap: 14px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .timeline-list li {
+      display: grid;
+      grid-template-columns: 110px 1fr;
+      gap: 18px;
+      padding: 14px 0;
+      border-top: 1px solid rgba(255, 255, 255, 0.07);
+    }
+
+    .timeline-list li:first-child {
+      border-top: 0;
+    }
+
+    .timeline-list time {
+      color: var(--primary);
+      font-family: var(--mono);
+      font-size: 12px;
+    }
+
+    .timeline-list b {
+      display: block;
+      color: var(--ink-strong);
+      font-size: 15px;
+    }
+
+    .timeline-list span {
+      display: block;
+      margin-top: 6px;
+      color: var(--body);
+      font-size: 14px;
+      line-height: 1.62;
+    }
+
+    .contact-list {
+      display: grid;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .contact-list a {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 46px;
+      padding: 10px 12px;
+      color: var(--body);
+      border: 1px solid var(--hairline);
+      border-radius: var(--radius-control);
+      background: rgba(255, 255, 255, 0.025);
+      transition: color 180ms ease, border-color 180ms ease, background 180ms ease;
+    }
+
+    .contact-list a:hover,
+    .contact-list a:focus-visible {
+      color: var(--ink-strong);
+      border-color: rgba(0, 217, 146, 0.56);
+      background: rgba(0, 217, 146, 0.08);
+      outline: none;
+    }
+
+    .contact-list a::after {
+      content: "open";
+      color: var(--primary);
+      font-family: var(--mono);
+      font-size: 11px;
+    }
+
+    .footer {
+      display: flex;
+      justify-content: space-between;
+      gap: 18px;
+      padding-top: 32px;
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 12px;
+    }
+
+    @media (max-width: 1120px) {
+      .hero h1 {
+        font-size: 62px;
+      }
+
+      .section-head h2 {
+        font-size: 38px;
+      }
+
+      .panel-copy h3 {
+        font-size: 42px;
+      }
+
+      .hero,
+      .project-layout,
+      .panel-grid,
+      .timeline {
+        grid-template-columns: 1fr;
+      }
+
+      .hero {
+        min-height: auto;
+        align-items: start;
+      }
+
+      .project-tabs {
+        position: relative;
+        top: 0;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .project-tab {
+        min-height: 150px;
+      }
+
+      .panel-copy {
+        border-right: 0;
+        border-bottom: 1px solid var(--hairline);
+      }
+
+      .skill-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 760px) {
+      .site-shell {
+        padding: 0 16px 52px;
+      }
+
+      .hero h1 {
+        font-size: 42px;
+        line-height: 1.04;
+      }
+
+      .hero-lead {
+        font-size: 16px;
+        line-height: 1.72;
+      }
+
+      .section-head h2 {
+        font-size: 30px;
+      }
+
+      .panel-copy h3 {
+        font-size: 32px;
+        line-height: 1.12;
+      }
+
+      .top-nav {
+        align-items: flex-start;
+        flex-direction: column;
+        padding: 14px 0;
+      }
+
+      .nav-links {
+        width: 100%;
+        justify-content: flex-start;
+      }
+
+      .hero {
+        padding: 56px 0 46px;
+      }
+
+      .hero-meta,
+      .proof-grid,
+      .project-tabs,
+      .mini-map,
+      .skill-grid,
+      .section-head {
+        grid-template-columns: 1fr;
+      }
+
+      .section {
+        padding: 54px 0;
+      }
+
+      .project-tab {
+        min-height: 118px;
+      }
+
+      .panel-copy,
+      .timeline-card,
+      .contact-card {
+        padding: 20px;
+      }
+
+      .shot-window {
+        min-height: 420px;
+        padding: 24px 18px;
+      }
+
+      .phone-shot {
+        width: min(78%, 270px);
+      }
+
+      .timeline-list li {
+        grid-template-columns: 1fr;
+        gap: 8px;
+      }
+
+      .footer {
+        flex-direction: column;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        scroll-behavior: auto !important;
+        animation-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.001ms !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main">跳到主要内容</a>
+  <div class="progress" aria-hidden="true"></div>
+  <div class="cursor-light" aria-hidden="true"></div>
+  <div class="site-shell">
+    <nav class="top-nav" aria-label="作品集导航">
+      <a class="brand-mark" href="#top" aria-label="回到顶部">
+        <img class="mark-symbol" src="assets/portfolio/avatar-yuanyue.jpg" alt="袁越头像">
+        <span class="brand-copy">
+          <strong>袁越 · Portfolio</strong>
+          <span>software / desktop / mini program / data</span>
+        </span>
+      </a>
+      <div class="nav-links">
+        <a href="#projects">项目</a>
+        <a href="#skills">能力</a>
+        <a href="#experience">经历</a>
+        <a class="primary-link" href="https://github.com/yuanyue1234" target="_blank" rel="noreferrer">GitHub</a>
+      </div>
+    </nav>
+
+    <header class="hero" id="top">
+      <div>
+        <p class="eyebrow">Interview portfolio · 2026</p>
+        <h1>四个项目，一页讲清。</h1>
+        <p class="hero-lead">
+          从移动端原生小程序、Windows 桌面工具，到 Python 数据采集与 Django + Vue3 前后端分离，我把每个项目拆成明确的产品场景、技术证据和可展示结果。
+        </p>
+        <div class="hero-actions">
+          <a class="primary-link" href="#projects">查看重点项目</a>
+          <a class="ghost-link" href="https://github.com/yuanyue1234/MousePointer" target="_blank" rel="noreferrer">MousePointer</a>
+          <a class="ghost-link" href="https://github.com/yuanyue1234/Moonlit-Log" target="_blank" rel="noreferrer">月光手帐仓库</a>
+          <a class="ghost-link" href="https://github.com/yuanyue1234/Asunny-Webside" target="_blank" rel="noreferrer">个人网站仓库</a>
+        </div>
+        <div class="hero-meta" aria-label="作品集概览">
+          <div class="meta-cell">
+            <b>04</b>
+            <span>重点项目拆分展示</span>
+          </div>
+          <div class="meta-cell">
+            <b>Vue3</b>
+            <span>Vite / Pinia / Router</span>
+          </div>
+          <div class="meta-cell">
+            <b>Canvas</b>
+            <span>小程序自绘编辑器</span>
+          </div>
+        </div>
+      </div>
+
+      <aside class="hero-console" aria-label="技术栈摘要">
+        <div class="console-card spotlight-card">
+          <div class="console-top">
+            <span>portfolio.config</span>
+            <span class="live-pill">ready</span>
+          </div>
+          <div class="stack-line">
+            <code>mobile</code>
+            <span>微信原生小程序、Canvas 2D、wx.Storage、PDF 导出。</span>
+          </div>
+          <div class="stack-line">
+            <code>desktop</code>
+            <span>Python、PySide6、Fluent 风格界面、Release 打包。</span>
+          </div>
+          <div class="stack-line">
+            <code>data</code>
+            <span>Python 爬虫、JSON 清洗、MySQL 导入、pyecharts 多维图表。</span>
+          </div>
+          <div class="stack-line">
+            <code>web</code>
+            <span>Django REST Framework、Vue3、Pinia、Axios、JWT。</span>
+          </div>
+        </div>
+        <div class="mini-map" aria-label="作品集项目索引">
+          <a class="mini-node" href="#projects" data-project-jump="moonlight"><b>月光手帐</b><span>Native Mini Program</span></a>
+          <a class="mini-node" href="#projects" data-project-jump="mousepointer"><b>MousePointer</b><span>Windows Tool</span></a>
+          <a class="mini-node" href="#projects" data-project-jump="crawler"><b>豆瓣爬虫</b><span>Python / pyecharts</span></a>
+          <a class="mini-node" href="#projects" data-project-jump="blog"><b>个人网站</b><span>Django / Vue3</span></a>
+        </div>
+      </aside>
+    </header>
+
+    <main id="main">
+      <section class="section" id="projects" aria-labelledby="projects-title">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">Selected work</p>
+            <h2 id="projects-title">用真实截图和技术链路说明项目价值。</h2>
+          </div>
+          <p>点击左侧项目切换详情；每个项目都按“场景、技术、证据、成果”组织，面试时可以直接照这个叙事展开。</p>
+        </div>
+
+        <div class="project-layout">
+          <div class="project-tabs" role="tablist" aria-label="项目切换">
+            <button class="project-tab active" type="button" role="tab" aria-selected="true" aria-controls="panel-moonlight" data-project="moonlight">
+              <span class="tab-index">01 / mini program</span>
+              <strong>月光手帐</strong>
+              <span>收集贴纸、编辑手帐、导出作品的微信原生小程序。</span>
+            </button>
+            <button class="project-tab" type="button" role="tab" aria-selected="false" aria-controls="panel-mousepointer" data-project="mousepointer">
+              <span class="tab-index">02 / windows tool</span>
+              <strong>MousePointer</strong>
+              <span>鼠标指针配置、预览、应用和资源库管理的桌面工具。</span>
+            </button>
+            <button class="project-tab" type="button" role="tab" aria-selected="false" aria-controls="panel-crawler" data-project="crawler">
+              <span class="tab-index">03 / python data</span>
+              <strong>豆瓣数据爬虫与分析</strong>
+              <span>Top250 数据采集、清洗、导入和可视化展示。</span>
+            </button>
+            <button class="project-tab" type="button" role="tab" aria-selected="false" aria-controls="panel-blog" data-project="blog">
+              <span class="tab-index">04 / full stack</span>
+              <strong>Django + Vue3 个人网站</strong>
+              <span>前后端分离、登录认证、留言互动和后台配置。</span>
+            </button>
+          </div>
+
+          <div class="project-stage">
+            <article class="project-panel active" id="panel-moonlight" role="tabpanel" data-panel="moonlight">
+              <div class="panel-grid">
+                <div class="panel-copy">
+                  <div>
+                    <p class="eyebrow">Moonlit Log</p>
+                    <h3>偏视觉编辑器的小程序项目，而不是普通表单工具。</h3>
+                  </div>
+                  <p class="desc">
+                    月光手帐以“收集实物周边并做成电子手帐”为主流程。用户可以上传或拍摄小卡、票根、冰箱贴等素材，整理进贴纸库，再进入 Canvas 手帐页进行拖拽、缩放、旋转、排版和导出。
+                  </p>
+                  <div class="tag-row">
+                    <span class="tag green">微信原生小程序</span>
+                    <span class="tag">Canvas 2D</span>
+                    <span class="tag">OffscreenCanvas</span>
+                    <span class="tag">wx.Storage</span>
+                    <span class="tag">AI 标签方案</span>
+                    <span class="tag">JS PDF</span>
+                  </div>
+                  <div class="proof-grid">
+                    <div class="proof"><b>50</b><span>最多 50 步撤销重做，每页独立历史。</span></div>
+                    <div class="proof"><b>8+8</b><span>8 种主题与 8 种手帐模板。</span></div>
+                    <div class="proof"><b>500ms</b><span>防抖自动保存，降低编辑丢失风险。</span></div>
+                  </div>
+                  <div class="detail-stack">
+                    <details open>
+                      <summary>我负责的部分</summary>
+                      <div class="detail-body">
+                        <ul>
+                          <li>设计小程序信息架构：首页、编辑器、贴纸库、素材提取、模板选择。</li>
+                          <li>实现 Canvas 2D 自绘编辑器的元素渲染、选中态、拖拽缩放、图层顺序和页面保存。</li>
+                          <li>规划贴纸库的搜索、分组、收藏、批量上传和一键放入手帐流程。</li>
+                        </ul>
+                      </div>
+                    </details>
+                    <details>
+                      <summary>技术难点</summary>
+                      <div class="detail-body">
+                        <ul>
+                          <li>在小程序 Canvas 环境中处理不同元素类型的坐标、缩放、旋转与命中检测。</li>
+                          <li>用 OffscreenCanvas 缓存纸面材质和图片效果，降低重复渲染成本。</li>
+                          <li>图片白边、纸贴、阴影按透明主体轮廓处理，避免变成矩形贴片。</li>
+                        </ul>
+                      </div>
+                    </details>
+                    <details>
+                      <summary>成果亮点</summary>
+                      <div class="detail-body">
+                        <ul>
+                          <li>形成“收集素材 -> 进入贴纸库 -> 放入手帐 -> 导出”的完整闭环。</li>
+                          <li>交互风格从普通工具页升级为暗色电绿色、强识别的编辑器界面。</li>
+                          <li>项目文档包含产品升级方案、最小成功案例和备案说明，便于持续迭代。</li>
+                        </ul>
+                      </div>
+                    </details>
+                  </div>
+                  <div class="project-actions">
+                    <a class="primary-link" href="https://github.com/yuanyue1234/Moonlit-Log" target="_blank" rel="noreferrer">打开 GitHub</a>
+                    <a class="ghost-link" href="#projects">查看截图轮播</a>
+                  </div>
+                </div>
+                <div class="panel-media">
+                  <div class="media-top"><span>screens / mini program</span><span>01-03</span></div>
+                  <div class="shot-window" data-carousel="moonlight">
+                    <img class="shot phone-shot active" src="assets/portfolio/moonlight-editor.png" alt="月光手帐编辑器页面截图">
+                    <img class="shot phone-shot" src="assets/portfolio/moonlight-stickers.png" alt="月光手帐素材库页面截图">
+                    <img class="shot phone-shot" src="assets/portfolio/moonlight-journal.png" alt="月光手帐手帐本列表页面截图">
+                  </div>
+                  <div class="carousel-controls">
+                    <span class="tag green">点击切换截图</span>
+                    <div class="dot-row" aria-label="月光手帐截图切换">
+                      <button class="dot active" type="button" data-carousel-target="moonlight" data-slide="0">1</button>
+                      <button class="dot" type="button" data-carousel-target="moonlight" data-slide="1">2</button>
+                      <button class="dot" type="button" data-carousel-target="moonlight" data-slide="2">3</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </article>
+
+            <article class="project-panel" id="panel-mousepointer" role="tabpanel" data-panel="mousepointer">
+              <div class="panel-grid">
+                <div class="panel-copy">
+                  <div class="mousepointer-brand">
+                    <img src="assets/portfolio/mousepointer-icon.png" alt="MousePointer 项目图标">
+                    <span>Windows desktop tool · release ready</span>
+                  </div>
+                  <div>
+                    <p class="eyebrow">MousePointer</p>
+                    <h3>把鼠标指针方案管理做成可下载的 Windows 工具。</h3>
+                  </div>
+                  <p class="desc">
+                    MousePointer 是面向新手用户和鼠标指针制作者的 Windows 图形化工具。它把原本分散、繁琐的指针方案导入、编辑、预览、应用、资源库管理和打包流程，整理成一个可下载的桌面应用。
+                  </p>
+                  <div class="tag-row">
+                    <span class="tag green">Python</span>
+                    <span class="tag">PySide6</span>
+                    <span class="tag">PyQt-Fluent-Widgets</span>
+                    <span class="tag">Windows GUI</span>
+                    <span class="tag">Release 打包</span>
+                    <span class="tag">GitHub Pages</span>
+                  </div>
+                  <div class="proof-grid">
+                    <div class="proof"><b>.cur/.ani</b><span>支持指针文件、图片、压缩包、exe 与文件夹导入。</span></div>
+                    <div class="proof"><b>v2.1.2</b><span>已有单文件绿色版 Release 下载入口。</span></div>
+                    <div class="proof"><b>资源库</b><span>在线资源库与本地应用形成项目闭环。</span></div>
+                  </div>
+                  <div class="detail-stack">
+                    <details open>
+                      <summary>我负责的部分</summary>
+                      <div class="detail-body">
+                        <ul>
+                          <li>围绕鼠标指针配置管理设计桌面工具流程：导入、识别、预览、应用、打包。</li>
+                          <li>使用 PySide6 搭建 Windows 图形界面，并参考 Fluent 风格提升控件质感。</li>
+                          <li>补齐 GitHub 仓库、Release 下载、在线资源库和项目展示页，让项目可被直接体验。</li>
+                        </ul>
+                      </div>
+                    </details>
+                    <details>
+                      <summary>技术难点</summary>
+                      <div class="detail-body">
+                        <ul>
+                          <li>指针资源格式分散，需要兼容 `.cur`、`.ani`、压缩包、文件夹和安装包导入。</li>
+                          <li>动态指针需要预览与状态切换，避免用户应用前只能反复试错。</li>
+                          <li>桌面工具不只要能运行，还要有打包、说明、资源入口和截图证据。</li>
+                        </ul>
+                      </div>
+                    </details>
+                    <details>
+                      <summary>成果亮点</summary>
+                      <div class="detail-body">
+                        <ul>
+                          <li>从“AI 辅助想法”推进到真实可下载的 Windows 软件。</li>
+                          <li>界面包含鼠标方案、资源库、方案切换等完整功能分区，产品边界清晰。</li>
+                          <li>适合作为 Python 应用开发、桌面 GUI、Release 发布意识的面试项目。</li>
+                        </ul>
+                      </div>
+                    </details>
+                  </div>
+                  <div class="project-actions">
+                    <a class="primary-link" href="https://github.com/yuanyue1234/MousePointer" target="_blank" rel="noreferrer">项目仓库</a>
+                    <a class="ghost-link" href="https://yuanyue1234.github.io/MousePointer/resources/" target="_blank" rel="noreferrer">在线资源库</a>
+                    <a class="ghost-link" href="https://github.com/yuanyue1234/MousePointer/releases/download/v2.1.2/MousePointer_Portable.exe" target="_blank" rel="noreferrer">下载 Release</a>
+                  </div>
+                </div>
+                <div class="panel-media">
+                  <div class="media-top">
+                    <span>screens / windows app</span>
+                    <span class="window-dots" aria-hidden="true"><i></i><i></i><i></i></span>
+                  </div>
+                  <div class="shot-window" data-carousel="mousepointer">
+                    <img class="shot mouse-shot active" src="assets/portfolio/mousepointer-1.png" alt="MousePointer 鼠标方案管理界面截图">
+                    <img class="shot mouse-shot" src="assets/portfolio/mousepointer-2.png" alt="MousePointer 方案切换界面截图">
+                    <img class="shot mouse-shot" src="assets/portfolio/mousepointer-3.png" alt="MousePointer 在线资源库界面截图">
+                  </div>
+                  <div class="carousel-controls">
+                    <span class="tag green">窗口三圆点 + 卡片吸附</span>
+                    <div class="dot-row" aria-label="MousePointer 截图切换">
+                      <button class="dot active" type="button" data-carousel-target="mousepointer" data-slide="0">1</button>
+                      <button class="dot" type="button" data-carousel-target="mousepointer" data-slide="1">2</button>
+                      <button class="dot" type="button" data-carousel-target="mousepointer" data-slide="2">3</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </article>
+
+            <article class="project-panel" id="panel-crawler" role="tabpanel" data-panel="crawler">
+              <div class="panel-grid">
+                <div class="panel-copy">
+                  <div>
+                    <p class="eyebrow">Python crawler</p>
+                    <h3>从电影数据采集，到清洗入库，再到可视化分析。</h3>
+                  </div>
+                  <p class="desc">
+                    豆瓣项目被拆成独立的数据工程作品来讲述：通过 Python 获取 Top250 电影数据，按影片、评分、年份、国家、类型标签等字段清洗为 JSON，再导入 Django/MySQL，最终用 pyecharts 和 ECharts 做多维度展示。
+                  </p>
+                  <div class="tag-row">
+                    <span class="tag green">Python</span>
+                    <span class="tag">requests</span>
+                    <span class="tag">JSON</span>
+                    <span class="tag">MySQL</span>
+                    <span class="tag">pyecharts</span>
+                    <span class="tag">ECharts</span>
+                  </div>
+                  <div class="proof-grid">
+                    <div class="proof"><b>Top250</b><span>电影榜单数据查询、分页与搜索。</span></div>
+                    <div class="proof"><b>10</b><span>本地 JSON 数据文件分批导入数据库。</span></div>
+                    <div class="proof"><b>6+</b><span>饼图、柱状图、折线、词云、散点、3D 柱图。</span></div>
+                  </div>
+                  <div class="detail-stack">
+                    <details open>
+                      <summary>我负责的部分</summary>
+                      <div class="detail-body">
+                        <ul>
+                          <li>整理电影字段结构，处理豆瓣 ID、标题、评分、年份、国家和类型标签。</li>
+                          <li>编写导入脚本，将 JSON 数据去重后写入 Django Movie 模型。</li>
+                          <li>用 pyecharts 生成国家分布、年代分布、标签词云、评分统计和 3D 图表。</li>
+                        </ul>
+                      </div>
+                    </details>
+                    <details>
+                      <summary>技术难点</summary>
+                      <div class="detail-body">
+                        <ul>
+                          <li>爬取数据字段存在缺失和格式不一致，需要在导入前做兜底处理。</li>
+                          <li>国家、类型、年份属于多值标签，需要拆分统计后再进入图表。</li>
+                          <li>大图表页面要兼顾可读性和交互性，使用数据缩放与图表工具箱辅助浏览。</li>
+                        </ul>
+                      </div>
+                    </details>
+                    <details>
+                      <summary>成果亮点</summary>
+                      <div class="detail-body">
+                        <ul>
+                          <li>把单纯爬虫结果沉淀为可查询、可分页、可可视化的数据系统。</li>
+                          <li>毕业设计中完整写明了数据展示、可视化和后端实现链路。</li>
+                          <li>可作为面试中讲解“数据采集到产品展示”的完整案例。</li>
+                        </ul>
+                      </div>
+                    </details>
+                  </div>
+                  <div class="project-actions">
+                    <a class="primary-link" href="https://github.com/yuanyue1234/Asunny-Webside" target="_blank" rel="noreferrer">打开 GitHub</a>
+                    <a class="ghost-link" href="#skills">查看相关能力</a>
+                  </div>
+                </div>
+                <div class="panel-media">
+                  <div class="media-top"><span>screens / data proof</span><span>01-04</span></div>
+                  <div class="shot-window" data-carousel="crawler">
+                    <img class="shot browser-shot active" src="assets/portfolio/docx-project-06.png" alt="豆瓣电影列表页面截图">
+                    <img class="shot browser-shot" src="assets/portfolio/docx-project-09.png" alt="豆瓣电影 3D 可视化图表截图">
+                    <img class="shot browser-shot" src="assets/portfolio/docx-project-07.png" alt="电影展示前端代码截图">
+                    <img class="shot browser-shot" src="assets/portfolio/docx-project-10.png" alt="数据可视化后端代码截图">
+                  </div>
+                  <div class="carousel-controls">
+                    <span class="tag green">真实文档截图</span>
+                    <div class="dot-row" aria-label="爬虫项目截图切换">
+                      <button class="dot active" type="button" data-carousel-target="crawler" data-slide="0">1</button>
+                      <button class="dot" type="button" data-carousel-target="crawler" data-slide="1">2</button>
+                      <button class="dot" type="button" data-carousel-target="crawler" data-slide="2">3</button>
+                      <button class="dot" type="button" data-carousel-target="crawler" data-slide="3">4</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </article>
+
+            <article class="project-panel" id="panel-blog" role="tabpanel" data-panel="blog">
+              <div class="panel-grid">
+                <div class="panel-copy">
+                  <div>
+                    <p class="eyebrow">Django + Vue3</p>
+                    <h3>有前台、有登录、有留言、有后台配置的个人网站系统。</h3>
+                  </div>
+                  <p class="desc">
+                    个人博客系统采用前后端分离架构：Django REST Framework 提供接口，Vue3 + Vite 构建前端页面，Pinia 管理登录状态，Axios 处理请求与认证头，JWT 完成身份校验，并通过 MySQL 持久化用户、留言、导航和站点配置。
+                  </p>
+                  <div class="tag-row">
+                    <span class="tag green">Vue3 3.5</span>
+                    <span class="tag">Vite 6</span>
+                    <span class="tag">Pinia</span>
+                    <span class="tag">Vue Router</span>
+                    <span class="tag">Axios</span>
+                    <span class="tag">Django REST</span>
+                    <span class="tag">JWT</span>
+                  </div>
+                  <div class="proof-grid">
+                    <div class="proof"><b>DRF</b><span>留言板、用户、站点配置接口。</span></div>
+                    <div class="proof"><b>JWT</b><span>登录后携带令牌访问个人中心。</span></div>
+                    <div class="proof"><b>Admin</b><span>Django 后台维护数据和配置。</span></div>
+                  </div>
+                  <div class="detail-stack">
+                    <details open>
+                      <summary>我负责的部分</summary>
+                      <div class="detail-body">
+                        <ul>
+                          <li>搭建 Vue3 页面结构、路由、登录注册、个人中心和留言板交互。</li>
+                          <li>接入 Axios 请求封装、Pinia 登录态、JWT 刷新与路由守卫。</li>
+                          <li>使用 Django Admin 管理电影数据、留言、用户和站点配置。</li>
+                        </ul>
+                      </div>
+                    </details>
+                    <details>
+                      <summary>技术难点</summary>
+                      <div class="detail-body">
+                        <ul>
+                          <li>前后端分离调试涉及跨域、Cookie、JWT Header 与开发代理配置。</li>
+                          <li>用户状态需要在刷新页面后恢复，并保证未登录时能正确跳转登录页。</li>
+                          <li>站点配置采用单例模式，避免多个配置项造成页面内容不一致。</li>
+                        </ul>
+                      </div>
+                    </details>
+                    <details>
+                      <summary>成果亮点</summary>
+                      <div class="detail-body">
+                        <ul>
+                          <li>完整覆盖游客、注册用户和管理员三类角色。</li>
+                          <li>既有博客展示，也有留言互动和后台维护，项目可作为综合 Web 系统讲述。</li>
+                          <li>使用 Vue3、Pinia、Router、Axios 的组合，能体现现代前端开发能力。</li>
+                        </ul>
+                      </div>
+                    </details>
+                  </div>
+                  <div class="project-actions">
+                    <a class="primary-link" href="https://github.com/yuanyue1234/Asunny-Webside" target="_blank" rel="noreferrer">打开 GitHub</a>
+                    <a class="ghost-link" href="#experience">查看经历</a>
+                  </div>
+                </div>
+                <div class="panel-media">
+                  <div class="media-top"><span>screens / full stack</span><span>01-05</span></div>
+                  <div class="shot-window" data-carousel="blog">
+                    <img class="shot browser-shot active" src="assets/portfolio/docx-project-12.png" alt="个人网站登录页面截图">
+                    <img class="shot browser-shot" src="assets/portfolio/docx-project-15.png" alt="个人网站注册页面截图">
+                    <img class="shot browser-shot" src="assets/portfolio/docx-project-19.png" alt="留言板页面截图">
+                    <img class="shot browser-shot" src="assets/portfolio/docx-project-25.png" alt="Django 后台管理首页截图">
+                    <img class="shot browser-shot" src="assets/portfolio/docx-project-28.png" alt="Django 后台账户管理截图">
+                  </div>
+                  <div class="carousel-controls">
+                    <span class="tag green">前端 + 后台</span>
+                    <div class="dot-row" aria-label="个人网站截图切换">
+                      <button class="dot active" type="button" data-carousel-target="blog" data-slide="0">1</button>
+                      <button class="dot" type="button" data-carousel-target="blog" data-slide="1">2</button>
+                      <button class="dot" type="button" data-carousel-target="blog" data-slide="2">3</button>
+                      <button class="dot" type="button" data-carousel-target="blog" data-slide="3">4</button>
+                      <button class="dot" type="button" data-carousel-target="blog" data-slide="4">5</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="skills" aria-labelledby="skills-title">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">Skill matrix</p>
+            <h2 id="skills-title">把技能写成可验证的项目能力。</h2>
+          </div>
+          <p>筛选按钮会隐藏不相关能力，便于面试时快速切到“前端”“后端”“数据”或“工程经验”的讲法。</p>
+        </div>
+
+        <div class="filter-strip" aria-label="技能筛选">
+          <button class="filter-chip active" type="button" data-filter="all">全部</button>
+          <button class="filter-chip" type="button" data-filter="frontend">前端</button>
+          <button class="filter-chip" type="button" data-filter="desktop">桌面</button>
+          <button class="filter-chip" type="button" data-filter="backend">后端</button>
+          <button class="filter-chip" type="button" data-filter="data">数据</button>
+          <button class="filter-chip" type="button" data-filter="engineering">工程</button>
+        </div>
+
+        <div class="skill-grid">
+          <article class="skill-card" data-skill="frontend">
+            <span class="skill-kicker">frontend.core</span>
+            <h3>熟练使用 Vue3</h3>
+            <p>掌握 Composition API、组件化拆分、Vue Router 路由守卫、Pinia 状态管理、Axios 请求封装与 Vite 项目构建。</p>
+          </article>
+          <article class="skill-card" data-skill="desktop engineering">
+            <span class="skill-kicker">desktop.pyside</span>
+            <h3>Windows 桌面工具</h3>
+            <p>能用 Python / PySide6 组织桌面 GUI、资源导入、预览应用、状态切换，并补齐 Release 打包与下载入口。</p>
+          </article>
+          <article class="skill-card" data-skill="backend">
+            <span class="skill-kicker">backend.api</span>
+            <h3>Django REST Framework</h3>
+            <p>能设计序列化器、视图接口、JWT 登录认证、权限控制和跨域配置，并与 Vue 前端联调。</p>
+          </article>
+          <article class="skill-card" data-skill="data">
+            <span class="skill-kicker">data.pipeline</span>
+            <h3>Python 爬虫与清洗</h3>
+            <p>能处理爬取、JSON 结构化、数据去重、异常字段兜底、MySQL 导入和可视化统计。</p>
+          </article>
+          <article class="skill-card" data-skill="engineering">
+            <span class="skill-kicker">java.maven</span>
+            <h3>Java + Maven 经验</h3>
+            <p>具备 Java 项目开发与 Maven 依赖管理、构建生命周期、模块组织、打包运行的基础项目经验。</p>
+          </article>
+          <article class="skill-card" data-skill="frontend">
+            <span class="skill-kicker">mini.canvas</span>
+            <h3>小程序 Canvas 编辑器</h3>
+            <p>能在微信原生环境中实现画布渲染、元素选中、拖拽缩放、撤销重做、本地存储和导出。</p>
+          </article>
+          <article class="skill-card" data-skill="backend engineering">
+            <span class="skill-kicker">storage.mysql</span>
+            <h3>MySQL 与后台管理</h3>
+            <p>能设计业务表字段，配合 Django ORM 完成电影、留言、导航、站点配置等数据维护。</p>
+          </article>
+          <article class="skill-card" data-skill="data frontend">
+            <span class="skill-kicker">chart.echarts</span>
+            <h3>数据可视化</h3>
+            <p>使用 pyecharts/ECharts 表达评分分布、国家占比、年份趋势、标签词云和三维分布图。</p>
+          </article>
+          <article class="skill-card" data-skill="engineering">
+            <span class="skill-kicker">deploy.git</span>
+            <h3>Git 与部署意识</h3>
+            <p>项目文档包含本地运行、服务器部署、Nginx、Gunicorn、静态资源和环境变量配置说明。</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="section" id="experience" aria-labelledby="experience-title">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">Background</p>
+            <h2 id="experience-title">面试里可以补充的经历与优势。</h2>
+          </div>
+          <p>这一部分保持简洁，只服务于“为什么能把项目做出来”和“入职后能怎样成长”。</p>
+        </div>
+
+        <div class="timeline">
+          <article class="timeline-card">
+            <h3>学习与项目经历</h3>
+            <ul class="timeline-list">
+              <li>
+                <time>2026.05</time>
+                <span><b>毕业设计完整落地</b>完成 Django + Vue3 综合个人网站系统，覆盖爬虫数据、可视化、用户认证、留言板和后台管理。</span>
+              </li>
+              <li>
+                <time>2026.06</time>
+                <span><b>月光手帐小程序迭代</b>围绕手帐编辑器、贴纸库、素材提取和导出流程持续打磨产品交互。</span>
+              </li>
+              <li>
+                <time>2024-2025</time>
+                <span><b>编程教学经历</b>曾教授 Scratch3、ScratchJr、Python，具备备课、制课和讲清技术概念的经验。</span>
+              </li>
+            </ul>
+          </article>
+          <aside class="contact-card">
+            <h3>项目入口</h3>
+            <p class="desc">两个 GitHub 仓库和本页静态作品集可以配合投递使用。外发时建议隐藏本地路径，仅保留仓库链接与截图。</p>
+            <div class="contact-list">
+              <a href="https://github.com/yuanyue1234/Moonlit-Log" target="_blank" rel="noreferrer">Moonlit-Log</a>
+              <a href="https://github.com/yuanyue1234/MousePointer" target="_blank" rel="noreferrer">MousePointer</a>
+              <a href="https://github.com/yuanyue1234/Asunny-Webside" target="_blank" rel="noreferrer">Asunny-Webside</a>
+              <a href="mailto:yuanyue4321@163.com">yuanyue4321@163.com</a>
+            </div>
+          </aside>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <span>Yuan Yue Portfolio v3</span>
+      <span>built as static html · dark canvas system</span>
+    </footer>
+  </div>
+
+  <script>
+    const root = document.documentElement;
+    const progress = document.querySelector(".progress");
+    const projectTabs = Array.from(document.querySelectorAll(".project-tab"));
+    const panels = Array.from(document.querySelectorAll(".project-panel"));
+    const filterChips = Array.from(document.querySelectorAll(".filter-chip"));
+    const skillCards = Array.from(document.querySelectorAll(".skill-card"));
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const finePointer = window.matchMedia("(pointer: fine)").matches;
+    const cursor = document.querySelector(".cursor-light");
+    let cursorTarget = null;
+
+    window.addEventListener("pointermove", (event) => {
+      root.style.setProperty("--mx", `${event.clientX}px`);
+      root.style.setProperty("--my", `${event.clientY}px`);
+      if (!finePointer || reduceMotion || !cursor) return;
+      if (cursorTarget) {
+        absorbCursor(cursorTarget);
+      } else {
+        cursor.style.setProperty("--cursor-x", `${event.clientX}px`);
+        cursor.style.setProperty("--cursor-y", `${event.clientY}px`);
+      }
+    }, { passive: true });
+
+    function absorbCursor(element) {
+      if (!cursor || !element) return;
+      const rect = element.getBoundingClientRect();
+      const style = getComputedStyle(element);
+      const centerX = rect.left + rect.width / 2;
+      const centerY = rect.top + rect.height / 2;
+      const strongTarget = element.matches("a, button, summary");
+      cursor.classList.add("is-link", "is-absorbed");
+      cursor.style.setProperty("--cursor-x", `${centerX}px`);
+      cursor.style.setProperty("--cursor-y", `${centerY}px`);
+      cursor.style.setProperty("--absorb-w", `${Math.min(strongTarget ? rect.width + 12 : 36, 180)}px`);
+      cursor.style.setProperty("--absorb-h", `${Math.min(strongTarget ? rect.height + 12 : 36, 72)}px`);
+      cursor.style.setProperty("--absorb-r", style.borderRadius || "999px");
+    }
+
+    function releaseCursor() {
+      if (!cursor) return;
+      cursorTarget = null;
+      cursor.classList.remove("is-link", "is-absorbed");
+      cursor.style.removeProperty("--absorb-w");
+      cursor.style.removeProperty("--absorb-h");
+      cursor.style.removeProperty("--absorb-r");
+    }
+
+    if (finePointer && !reduceMotion && cursor) {
+      document.addEventListener("pointerdown", () => cursor.classList.add("is-pressed"));
+      document.addEventListener("pointerup", () => cursor.classList.remove("is-pressed"));
+
+      document.querySelectorAll("a, button, summary, .skill-card, .project-tab, .mini-node").forEach((element) => {
+        element.addEventListener("pointerenter", () => {
+          cursorTarget = element;
+          absorbCursor(element);
+        });
+        element.addEventListener("pointerleave", releaseCursor);
+      });
+    }
+
+    document.querySelectorAll(".spotlight-card").forEach((card) => {
+      card.addEventListener("pointermove", (event) => {
+        const rect = card.getBoundingClientRect();
+        card.style.setProperty("--spot-x", `${event.clientX - rect.left}px`);
+        card.style.setProperty("--spot-y", `${event.clientY - rect.top}px`);
+      }, { passive: true });
+    });
+
+    const physicsTargets = Array.from(document.querySelectorAll(".project-tab, .project-stage, .skill-card, .timeline-card, .contact-card, .mini-node"));
+    const physicsState = new Map();
+    physicsTargets.forEach((card) => {
+      card.classList.add("physics-card");
+      physicsState.set(card, { rx: 0, ry: 0, z: 0, vx: 0, vy: 0, vz: 0, tx: 0, ty: 0, tz: 0 });
+      card.addEventListener("pointerenter", () => {
+        card.classList.add("is-tilting");
+        const state = physicsState.get(card);
+        if (state) state.tz = 4;
+      });
+      card.addEventListener("pointermove", (event) => {
+        if (reduceMotion || !finePointer) return;
+        const rect = card.getBoundingClientRect();
+        const px = (event.clientX - rect.left) / rect.width;
+        const py = (event.clientY - rect.top) / rect.height;
+        const state = physicsState.get(card);
+        if (!state) return;
+        state.ty = (px - 0.5) * 5.2;
+        state.tx = (py - 0.5) * -5.2;
+        state.tz = 6;
+        card.style.setProperty("--glare-x", `${px * 100}%`);
+        card.style.setProperty("--glare-y", `${py * 100}%`);
+        card.style.setProperty("--shadow-x", `${(px - 0.5) * 18}px`);
+        card.style.setProperty("--shadow-y", `${18 + py * 10}px`);
+      });
+      card.addEventListener("pointerleave", () => {
+        card.classList.remove("is-tilting");
+        const state = physicsState.get(card);
+        if (!state) return;
+        state.tx = 0;
+        state.ty = 0;
+        state.tz = 0;
+        card.style.setProperty("--shadow-x", "0px");
+        card.style.setProperty("--shadow-y", "18px");
+      });
+    });
+
+    function animatePhysics() {
+      if (reduceMotion) return;
+      physicsState.forEach((state, card) => {
+        state.vx += (state.tx - state.rx) * 0.095;
+        state.vy += (state.ty - state.ry) * 0.095;
+        state.vz += (state.tz - state.z) * 0.12;
+        state.vx *= 0.78;
+        state.vy *= 0.78;
+        state.vz *= 0.74;
+        state.rx += state.vx;
+        state.ry += state.vy;
+        state.z += state.vz;
+        card.style.setProperty("--rx", `${state.rx.toFixed(3)}deg`);
+        card.style.setProperty("--ry", `${state.ry.toFixed(3)}deg`);
+        card.style.setProperty("--tz", `${state.z.toFixed(3)}px`);
+      });
+      requestAnimationFrame(animatePhysics);
+    }
+
+    animatePhysics();
+
+    function updateProgress() {
+      const total = document.documentElement.scrollHeight - window.innerHeight;
+      const ratio = total > 0 ? (window.scrollY / total) * 100 : 0;
+      progress.style.setProperty("--scroll", `${Math.min(100, Math.max(0, ratio))}%`);
+    }
+
+    window.addEventListener("scroll", updateProgress, { passive: true });
+    window.addEventListener("resize", updateProgress, { passive: true });
+    updateProgress();
+
+    function activateProject(project) {
+      projectTabs.forEach((tab) => {
+        const active = tab.dataset.project === project;
+        tab.classList.toggle("active", active);
+        tab.setAttribute("aria-selected", String(active));
+      });
+
+      panels.forEach((panel) => {
+        panel.classList.toggle("active", panel.dataset.panel === project);
+      });
+    }
+
+    projectTabs.forEach((tab) => {
+      tab.addEventListener("click", () => activateProject(tab.dataset.project));
+    });
+
+    document.querySelectorAll("[data-project-jump]").forEach((link) => {
+      link.addEventListener("click", () => activateProject(link.dataset.projectJump));
+    });
+
+    function activateSlide(carouselName, index) {
+      const holder = document.querySelector(`[data-carousel="${carouselName}"]`);
+      if (!holder) return;
+      const shots = Array.from(holder.querySelectorAll(".shot"));
+      const dots = Array.from(document.querySelectorAll(`[data-carousel-target="${carouselName}"]`));
+      shots.forEach((shot, shotIndex) => shot.classList.toggle("active", shotIndex === index));
+      dots.forEach((dot, dotIndex) => dot.classList.toggle("active", dotIndex === index));
+    }
+
+    document.querySelectorAll("[data-carousel-target]").forEach((button) => {
+      button.addEventListener("click", () => {
+        activateSlide(button.dataset.carouselTarget, Number(button.dataset.slide));
+      });
+    });
+
+    filterChips.forEach((chip) => {
+      chip.addEventListener("click", () => {
+        const filter = chip.dataset.filter;
+        filterChips.forEach((item) => item.classList.toggle("active", item === chip));
+        skillCards.forEach((card) => {
+          const visible = filter === "all" || card.dataset.skill.split(" ").includes(filter);
+          card.classList.toggle("hidden", !visible);
+        });
+      });
+    });
+  </script>
+</body>
+</html>
