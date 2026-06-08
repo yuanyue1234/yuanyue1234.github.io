@@ -127,6 +127,9 @@
       z-index: 50;
       width: 9px;
       height: 9px;
+      --absorb-w: 28px;
+      --absorb-h: 28px;
+      --absorb-r: 999px;
       border-radius: 50%;
       background: #fff;
       pointer-events: none;
@@ -164,6 +167,24 @@
       border-color: rgba(255,255,255,.38);
       opacity: .8;
       transform: translate(-50%, -50%) scale(1.12);
+    }
+
+    .cursor-light.is-absorbed {
+      width: 14px;
+      height: 14px;
+      box-shadow:
+        0 0 0 5px rgba(255,255,255,.055),
+        0 0 30px rgba(255,255,255,.24);
+      mix-blend-mode: normal;
+    }
+
+    .cursor-light.is-absorbed::after {
+      width: var(--absorb-w);
+      height: var(--absorb-h);
+      border-color: rgba(255,255,255,.42);
+      border-radius: var(--absorb-r);
+      opacity: .72;
+      transform: translate(-50%, -50%);
     }
 
     .cursor-light.is-pressed {
@@ -1944,7 +1965,10 @@
 
       const setFreeCursor = () => {
         if (!cursor || reduceMotion || !finePointer) return;
-        cursor.classList.remove('is-link');
+        cursor.classList.remove('is-link', 'is-absorbed');
+        cursor.style.removeProperty('--absorb-w');
+        cursor.style.removeProperty('--absorb-h');
+        cursor.style.removeProperty('--absorb-r');
         cursor.style.setProperty('--cursor-x', `${pointerX}px`);
         cursor.style.setProperty('--cursor-y', `${pointerY}px`);
       };
@@ -1954,12 +1978,16 @@
         const rect = el.getBoundingClientRect();
         const centerX = rect.left + rect.width / 2;
         const centerY = rect.top + rect.height / 2;
-        const pull = el.classList.contains('button') || el.tagName === 'BUTTON' ? 0.34 : 0.22;
-        const x = pointerX + (centerX - pointerX) * pull;
-        const y = pointerY + (centerY - pointerY) * pull;
-        cursor.classList.add('is-link');
-        cursor.style.setProperty('--cursor-x', `${x}px`);
-        cursor.style.setProperty('--cursor-y', `${y}px`);
+        const style = getComputedStyle(el);
+        const isStrongTarget = el.classList.contains('button') || el.tagName === 'BUTTON';
+        const targetWidth = Math.min(isStrongTarget ? rect.width + 12 : 34, 180);
+        const targetHeight = Math.min(isStrongTarget ? rect.height + 12 : 34, 64);
+        cursor.classList.add('is-link', 'is-absorbed');
+        cursor.style.setProperty('--absorb-w', `${targetWidth}px`);
+        cursor.style.setProperty('--absorb-h', `${targetHeight}px`);
+        cursor.style.setProperty('--absorb-r', style.borderRadius || '999px');
+        cursor.style.setProperty('--cursor-x', `${centerX}px`);
+        cursor.style.setProperty('--cursor-y', `${centerY}px`);
       };
 
       document.addEventListener('pointermove', (event) => {
@@ -1987,7 +2015,7 @@
         });
         el.addEventListener('pointerleave', () => {
           if (cursorTarget === el) cursorTarget = null;
-          cursor?.classList.remove('is-link');
+          cursor?.classList.remove('is-link', 'is-absorbed');
           setFreeCursor();
         });
       });
