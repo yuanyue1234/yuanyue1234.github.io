@@ -1,0 +1,2224 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="袁越的 AI 产品化求职作品集，重点展示 MousePointer 鼠标指针配置管理器。">
+  <title>袁越 | AI 产品化新人</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --canvas: #0a0a0a;
+      --canvas-soft: #111214;
+      --canvas-card: #18191b;
+      --canvas-line: rgba(255, 255, 255, 0.12);
+      --line-strong: rgba(255, 255, 255, 0.22);
+      --ink: #ffffff;
+      --body: #d8d9dd;
+      --muted: #858a91;
+      --muted-2: #5d6269;
+      --accent: #a0c3ec;
+      --accent-2: #ffb36b;
+      --accent-3: #c4b5fd;
+      --ok: #a6e3b8;
+      --radius-sm: 8px;
+      --pill: 999px;
+      --container: 1180px;
+      --ease: cubic-bezier(.2, .8, .2, 1);
+      --ease-out: cubic-bezier(.16, 1, .3, 1);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      background: var(--canvas);
+      scroll-behavior: auto;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      overflow-x: hidden;
+      background:
+        radial-gradient(circle at 20% 10%, rgba(160, 195, 236, 0.12), transparent 24rem),
+        radial-gradient(circle at 82% 34%, rgba(255, 179, 107, 0.08), transparent 18rem),
+        linear-gradient(180deg, #0a0a0a 0%, #0a0a0a 46%, #0d0d0e 100%);
+      color: var(--ink);
+      font-family: "Segoe UI Variable", "Segoe UI", "Microsoft YaHei UI", "PingFang SC", sans-serif;
+      letter-spacing: 0;
+    }
+
+    @media (pointer: fine) {
+      body,
+      a,
+      button,
+      .skill-chip,
+      .shot-tab,
+      .perspective-tab {
+        cursor: none;
+      }
+    }
+
+    body::before {
+      position: fixed;
+      inset: 0;
+      z-index: -2;
+      pointer-events: none;
+      content: "";
+      background-image:
+        linear-gradient(rgba(255,255,255,0.045) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.045) 1px, transparent 1px);
+      background-size: 72px 72px;
+      mask-image: linear-gradient(to bottom, rgba(0,0,0,0.9), transparent 82%);
+    }
+
+    body::after {
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      pointer-events: none;
+      content: "";
+      background:
+        linear-gradient(90deg, rgba(255,255,255,0.05), transparent 18%, transparent 82%, rgba(255,255,255,0.05)),
+        repeating-linear-gradient(180deg, rgba(255,255,255,0.018) 0 1px, transparent 1px 5px);
+      opacity: .42;
+      mix-blend-mode: screen;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+    }
+
+    .noise {
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      pointer-events: none;
+      opacity: .22;
+      background-image:
+        radial-gradient(circle at 30% 20%, rgba(255,255,255,.2) 0 1px, transparent 1px),
+        radial-gradient(circle at 70% 60%, rgba(255,255,255,.12) 0 1px, transparent 1px);
+      background-size: 5px 5px, 7px 7px;
+      mix-blend-mode: overlay;
+    }
+
+    #particle-field {
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      opacity: .7;
+    }
+
+    .cursor-light {
+      position: fixed;
+      left: 0;
+      top: 0;
+      z-index: 50;
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: #fff;
+      pointer-events: none;
+      transform: translate3d(var(--cursor-x, -80px), var(--cursor-y, -80px), 0) translate(-50%, -50%);
+      transition:
+        width .18s var(--ease),
+        height .18s var(--ease),
+        box-shadow .22s var(--ease),
+        opacity .22s var(--ease),
+        transform .08s linear;
+      mix-blend-mode: difference;
+    }
+
+    .cursor-light::after {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 24px;
+      height: 24px;
+      border: 1px solid rgba(255,255,255,.18);
+      border-radius: 50%;
+      content: "";
+      transform: translate(-50%, -50%);
+      opacity: .55;
+      transition: opacity .18s var(--ease), transform .18s var(--ease), border-color .18s var(--ease);
+    }
+
+    .cursor-light.is-link {
+      width: 12px;
+      height: 12px;
+      box-shadow: 0 0 24px rgba(255,255,255,.34);
+    }
+
+    .cursor-light.is-link::after {
+      border-color: rgba(255,255,255,.38);
+      opacity: .8;
+      transform: translate(-50%, -50%) scale(1.12);
+    }
+
+    .cursor-light.is-pressed {
+      width: 7px;
+      height: 7px;
+      box-shadow: 0 0 0 9px rgba(255,255,255,.08);
+    }
+
+    .page-shell {
+      position: relative;
+      min-height: 100vh;
+    }
+
+    .physics-card {
+      --rx: 0deg;
+      --ry: 0deg;
+      --tz: 0px;
+      --glare-x: 50%;
+      --glare-y: 50%;
+      --shadow-x: 0px;
+      --shadow-y: 18px;
+      transform-style: preserve-3d;
+      will-change: transform, box-shadow;
+    }
+
+    .physics-card {
+      position: relative;
+      overflow: hidden;
+      transform: perspective(900px) rotateX(var(--rx)) rotateY(var(--ry)) translate3d(0, 0, var(--tz));
+      box-shadow:
+        calc(var(--shadow-x) * .35) calc(var(--shadow-y) * .55) 42px rgba(0, 0, 0, .24),
+        inset 0 1px 0 rgba(255, 255, 255, .04);
+      transition: border-color .22s var(--ease), background .22s var(--ease), box-shadow .22s var(--ease);
+    }
+
+    .physics-card::after {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      border-radius: inherit;
+      background:
+        radial-gradient(circle at var(--glare-x) var(--glare-y), rgba(255,255,255,.18), rgba(255,255,255,.05) 18%, transparent 42%),
+        linear-gradient(135deg, rgba(255,255,255,.06), transparent 38%, rgba(255,255,255,.03));
+      content: "";
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .22s var(--ease);
+    }
+
+    .physics-card.is-tilting {
+      border-color: rgba(255,255,255,.28);
+      box-shadow:
+        calc(var(--shadow-x) * .75) calc(var(--shadow-y) * 1.1) 70px rgba(0, 0, 0, .46),
+        0 0 0 1px rgba(255,255,255,.06),
+        inset 0 1px 0 rgba(255,255,255,.08);
+    }
+
+    .physics-card.is-tilting::after {
+      opacity: 1;
+    }
+
+    .physics-card > * {
+      position: relative;
+      z-index: 1;
+    }
+
+    .nav {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      border-bottom: 1px solid rgba(255,255,255,.08);
+      background: rgba(10, 10, 10, 0.72);
+      backdrop-filter: blur(18px);
+    }
+
+    .nav-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: min(var(--container), calc(100% - 40px));
+      min-height: 72px;
+      margin: 0 auto;
+      gap: 24px;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      min-width: fit-content;
+    }
+
+    .brand-mark {
+      display: grid;
+      place-items: center;
+      width: 34px;
+      height: 34px;
+      border: 1px solid var(--line-strong);
+      border-radius: 50%;
+      color: #0a0a0a;
+      background: var(--ink);
+      font-size: 13px;
+      font-weight: 650;
+    }
+
+    .brand-copy {
+      display: grid;
+      gap: 1px;
+    }
+
+    .brand-title {
+      font-size: 14px;
+      color: var(--ink);
+    }
+
+    .brand-subtitle,
+    .mono {
+      color: var(--muted);
+      font-family: "Cascadia Mono", "SFMono-Regular", Consolas, monospace;
+      font-size: 11px;
+      line-height: 1.45;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 8px;
+      color: var(--body);
+      font-size: 13px;
+    }
+
+    .nav-links a {
+      border: 1px solid transparent;
+      border-radius: var(--pill);
+      padding: 9px 13px;
+      transition: border-color .2s var(--ease), background .2s var(--ease), color .2s var(--ease), transform .2s var(--ease);
+    }
+
+    .nav-links a:hover,
+    .nav-links a:focus-visible,
+    .nav-links a.is-active {
+      border-color: rgba(255,255,255,.18);
+      background: rgba(255,255,255,.06);
+      color: var(--ink);
+      outline: none;
+    }
+
+    .magnetic {
+      --mx: 0px;
+      --my: 0px;
+      transform: translate3d(var(--mx), var(--my), 0);
+    }
+
+    .section {
+      border-bottom: 1px solid rgba(255,255,255,.08);
+      scroll-margin-top: 88px;
+    }
+
+    .container {
+      width: min(var(--container), calc(100% - 40px));
+      margin: 0 auto;
+    }
+
+    .hero {
+      position: relative;
+      display: grid;
+      align-items: end;
+      min-height: min(880px, calc(100vh - 72px));
+      padding: 70px 0 34px;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.08fr) minmax(300px, .72fr);
+      align-items: end;
+      gap: 48px;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 22px;
+      color: var(--body);
+    }
+
+    .eyebrow::before {
+      width: 34px;
+      height: 1px;
+      background: var(--line-strong);
+      content: "";
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin: 0;
+    }
+
+    .hero h1 {
+      max-width: 920px;
+      font-size: 98px;
+      font-weight: 400;
+      line-height: .94;
+      letter-spacing: 0;
+      text-wrap: pretty;
+      line-break: anywhere;
+      word-break: break-all;
+      overflow-wrap: anywhere;
+    }
+
+    .hero h1 .dim {
+      color: rgba(255,255,255,.48);
+    }
+
+    .mobile-break {
+      display: none;
+    }
+
+    .hero-lead {
+      max-width: 660px;
+      margin-top: 28px;
+      color: var(--body);
+      font-size: 21px;
+      line-height: 1.55;
+      text-wrap: pretty;
+    }
+
+    .hero-actions,
+    .project-actions,
+    .contact-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 34px;
+    }
+
+    .button {
+      position: relative;
+      overflow: hidden;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-height: 38px;
+      border: 1px solid rgba(255,255,255,.28);
+      border-radius: var(--pill);
+      padding: 9px 15px;
+      color: var(--ink);
+      background: rgba(255,255,255,.018);
+      font-size: 13px;
+      line-height: 1;
+      transform: translate3d(var(--mx, 0px), var(--my, 0px), 0);
+      transition: border-color .22s var(--ease), background .22s var(--ease), color .22s var(--ease), transform .22s var(--ease);
+    }
+
+    .button::before {
+      position: absolute;
+      inset: -1px;
+      border-radius: inherit;
+      background: linear-gradient(110deg, transparent 8%, rgba(255,255,255,.34) 46%, transparent 62%);
+      content: "";
+      transform: translateX(-120%);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .18s var(--ease), transform .45s var(--ease-out);
+    }
+
+    .button:hover,
+    .button:focus-visible {
+      border-color: rgba(255,255,255,.7);
+      background: rgba(255,255,255,.055);
+      transform: translate3d(var(--mx, 0px), calc(var(--my, 0px) - 1px), 0);
+      outline: none;
+    }
+
+    .button:hover::before,
+    .button:focus-visible::before {
+      opacity: .42;
+      transform: translateX(115%);
+    }
+
+    .button:active {
+      transform: translate3d(var(--mx, 0px), var(--my, 0px), 0) scale(.985);
+    }
+
+    .button.primary {
+      border-color: var(--ink);
+      color: var(--canvas);
+      background: rgba(255,255,255,.94);
+    }
+
+    .button.primary:hover,
+    .button.primary:focus-visible {
+      background: #fff;
+    }
+
+    .button .arrow {
+      font-family: "Cascadia Mono", Consolas, monospace;
+      font-size: 13px;
+    }
+
+    .hero-panel {
+      position: relative;
+      overflow: hidden;
+      border: 1px solid var(--canvas-line);
+      border-radius: var(--radius-sm);
+      background: linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.025));
+      transform-style: preserve-3d;
+    }
+
+    .hero-panel::before {
+      position: absolute;
+      inset: 0;
+      content: "";
+      background:
+        linear-gradient(120deg, transparent 0 28%, rgba(255,255,255,.15) 34%, transparent 42%),
+        radial-gradient(circle at 82% 16%, rgba(160,195,236,.18), transparent 11rem);
+      transform: translateX(-55%);
+      animation: sheen 6s var(--ease-out) infinite;
+    }
+
+    .terminal {
+      position: relative;
+      padding: 20px;
+      min-height: 420px;
+    }
+
+    .terminal-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 42px;
+      color: var(--muted);
+    }
+
+    .dots {
+      display: flex;
+      gap: 7px;
+    }
+
+    .dots span {
+      width: 7px;
+      height: 7px;
+      border: 1px solid rgba(255,255,255,.32);
+      border-radius: 50%;
+    }
+
+    .terminal-title {
+      font-family: "Cascadia Mono", Consolas, monospace;
+      font-size: 11px;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    .terminal-lines {
+      display: grid;
+      gap: 18px;
+      font-family: "Cascadia Mono", "Microsoft YaHei UI", monospace;
+      font-size: 13px;
+      line-height: 1.65;
+      color: var(--body);
+    }
+
+    .terminal-lines span {
+      color: var(--muted);
+    }
+
+    .terminal-lines strong {
+      color: var(--ink);
+      font-weight: 400;
+    }
+
+    .profile-strip {
+      position: absolute;
+      left: 20px;
+      right: 20px;
+      bottom: 20px;
+      display: grid;
+      grid-template-columns: 58px 1fr;
+      align-items: center;
+      gap: 16px;
+      border-top: 1px solid rgba(255,255,255,.1);
+      padding-top: 18px;
+    }
+
+    .profile-avatar {
+      display: grid;
+      place-items: center;
+      width: 58px;
+      height: 58px;
+      border: 1px solid rgba(255,255,255,.24);
+      border-radius: 50%;
+      background: #fff;
+      color: #0a0a0a;
+      font-size: 18px;
+      font-weight: 700;
+    }
+
+    .profile-strip h2 {
+      margin-bottom: 4px;
+      font-size: 19px;
+      font-weight: 400;
+    }
+
+    .profile-strip p {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.45;
+    }
+
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      margin-top: 52px;
+      border: 1px solid rgba(255,255,255,.09);
+      background: rgba(255,255,255,.09);
+    }
+
+    .metric {
+      min-height: 118px;
+      padding: 18px;
+      background: rgba(10,10,10,.86);
+    }
+
+    .metric strong {
+      display: block;
+      margin-bottom: 12px;
+      font-size: 40px;
+      font-weight: 400;
+      line-height: 1;
+    }
+
+    .metric span {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .section-pad {
+      padding: 88px 0;
+    }
+
+    .section-head {
+      display: grid;
+      grid-template-columns: minmax(0, .78fr) minmax(260px, .42fr);
+      align-items: end;
+      gap: 36px;
+      margin-bottom: 38px;
+    }
+
+    .section-head h2 {
+      margin-top: 16px;
+      font-size: 62px;
+      font-weight: 400;
+      line-height: 1.02;
+      letter-spacing: 0;
+      text-wrap: pretty;
+      line-break: anywhere;
+      word-break: break-all;
+      overflow-wrap: anywhere;
+    }
+
+    .section-head p {
+      color: var(--body);
+      font-size: 16px;
+      line-height: 1.72;
+      text-wrap: pretty;
+    }
+
+    .story-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 1px;
+      border: 1px solid rgba(255,255,255,.09);
+      background: rgba(255,255,255,.09);
+    }
+
+    .story-item {
+      position: relative;
+      min-height: 260px;
+      overflow: hidden;
+      padding: 24px;
+      background: linear-gradient(180deg, rgba(24,25,27,.96), rgba(12,12,13,.98));
+    }
+
+    .story-item::before {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: -1px;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,.45), transparent);
+      content: "";
+      transform: translateX(-100%);
+      transition: transform .8s var(--ease-out);
+    }
+
+    .story-item:hover::before {
+      transform: translateX(100%);
+    }
+
+    .story-item h3 {
+      margin: 44px 0 16px;
+      font-size: 24px;
+      font-weight: 400;
+      line-height: 1.18;
+    }
+
+    .story-item p {
+      color: var(--body);
+      font-size: 14px;
+      line-height: 1.72;
+    }
+
+    .story-index {
+      color: var(--muted);
+      font-family: "Cascadia Mono", Consolas, monospace;
+      font-size: 12px;
+    }
+
+    .perspective-console {
+      display: grid;
+      grid-template-columns: 300px minmax(0, 1fr);
+      gap: 1px;
+      margin-top: 32px;
+      border: 1px solid rgba(255,255,255,.1);
+      background: rgba(255,255,255,.1);
+    }
+
+    .perspective-tabs {
+      display: grid;
+      gap: 1px;
+      background: rgba(255,255,255,.08);
+    }
+
+    .perspective-tab {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 82px;
+      border: 0;
+      border-radius: 0;
+      padding: 18px 20px;
+      color: var(--body);
+      background: rgba(12,12,13,.94);
+      font: inherit;
+      text-align: left;
+      transition: background .24s var(--ease), color .24s var(--ease);
+    }
+
+    .perspective-tab span {
+      color: var(--muted);
+      font-family: "Cascadia Mono", Consolas, monospace;
+      font-size: 11px;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    .perspective-tab strong {
+      font-weight: 400;
+    }
+
+    .perspective-tab:hover,
+    .perspective-tab:focus-visible,
+    .perspective-tab.is-active {
+      color: var(--ink);
+      background: rgba(255,255,255,.07);
+      outline: none;
+    }
+
+    .perspective-panel {
+      position: relative;
+      min-height: 246px;
+      overflow: hidden;
+      padding: 28px;
+      background: rgba(14,14,15,.95);
+    }
+
+    .perspective-panel::before {
+      position: absolute;
+      left: var(--panel-x, 65%);
+      top: var(--panel-y, 35%);
+      width: 260px;
+      height: 260px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(160,195,236,.2), transparent 66%);
+      content: "";
+      transform: translate(-50%, -50%);
+      transition: left .4s var(--ease-out), top .4s var(--ease-out);
+      pointer-events: none;
+    }
+
+    .perspective-content {
+      position: relative;
+      display: none;
+      max-width: 760px;
+    }
+
+    .perspective-content.is-active {
+      display: block;
+      animation: panel-in .36s var(--ease-out);
+    }
+
+    .perspective-content h3 {
+      margin-bottom: 14px;
+      font-size: 40px;
+      font-weight: 400;
+      line-height: 1.12;
+    }
+
+    .perspective-content p {
+      color: var(--body);
+      font-size: 16px;
+      line-height: 1.75;
+      text-wrap: pretty;
+    }
+
+    .proof-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 22px;
+    }
+
+    .proof-pill {
+      border: 1px solid rgba(255,255,255,.16);
+      border-radius: var(--pill);
+      padding: 8px 11px;
+      color: var(--muted);
+      background: rgba(255,255,255,.03);
+      font-family: "Cascadia Mono", Consolas, monospace;
+      font-size: 11px;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+    }
+
+    .project-wrap {
+      display: grid;
+      grid-template-columns: minmax(0, .92fr) minmax(340px, .78fr);
+      gap: 32px;
+      align-items: stretch;
+    }
+
+    .project-copy {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-height: 620px;
+      border: 1px solid var(--canvas-line);
+      border-radius: var(--radius-sm);
+      padding: 30px;
+      background: rgba(20,20,21,.78);
+    }
+
+    .project-title {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+
+    .project-title img {
+      width: 56px;
+      height: 56px;
+      border-radius: 14px;
+    }
+
+    .project-title h2 {
+      font-size: 58px;
+      font-weight: 400;
+      line-height: 1;
+    }
+
+    .project-copy .lead {
+      max-width: 680px;
+      color: var(--body);
+      font-size: 18px;
+      line-height: 1.7;
+      text-wrap: pretty;
+    }
+
+    .feature-list {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 1px;
+      margin-top: 34px;
+      border: 1px solid rgba(255,255,255,.08);
+      background: rgba(255,255,255,.08);
+    }
+
+    .feature {
+      min-height: 112px;
+      padding: 17px;
+      background: rgba(10,10,10,.5);
+    }
+
+    .feature span {
+      display: block;
+      margin-bottom: 12px;
+      color: var(--muted);
+      font-family: "Cascadia Mono", Consolas, monospace;
+      font-size: 11px;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    .feature p {
+      color: var(--body);
+      font-size: 14px;
+      line-height: 1.55;
+    }
+
+    .project-stage {
+      position: relative;
+      min-height: 620px;
+      overflow: hidden;
+      border: 1px solid var(--canvas-line);
+      border-radius: var(--radius-sm);
+      background:
+        radial-gradient(circle at 32% 10%, rgba(160,195,236,.12), transparent 16rem),
+        linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.015));
+      transform-style: preserve-3d;
+      perspective: 1200px;
+    }
+
+    .device-window {
+      position: absolute;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,.18);
+      border-radius: 8px;
+      background: #111;
+      box-shadow: 0 24px 90px rgba(0,0,0,.38);
+      opacity: .64;
+      filter: saturate(.75) brightness(.72);
+      transition: transform .35s var(--ease-out), border-color .25s var(--ease), opacity .25s var(--ease), filter .25s var(--ease), box-shadow .25s var(--ease);
+      will-change: transform;
+    }
+
+    .device-window:hover,
+    .device-window.is-selected {
+      border-color: rgba(255,255,255,.4);
+      opacity: 1;
+      filter: saturate(1) brightness(1);
+      box-shadow: 0 26px 100px rgba(0,0,0,.46), 0 0 0 1px rgba(160,195,236,.14);
+      z-index: 3;
+    }
+
+    .window-main {
+      left: 8%;
+      top: 8%;
+      width: 78%;
+      transform: perspective(900px) rotateX(calc(4deg + var(--rx, 0deg))) rotateY(calc(-8deg + var(--ry, 0deg))) translateZ(calc(36px + var(--tz, 0px)));
+    }
+
+    .window-side {
+      right: 7%;
+      bottom: 9%;
+      width: 52%;
+      transform: perspective(900px) rotateX(calc(5deg + var(--rx, 0deg))) rotateY(calc(10deg + var(--ry, 0deg))) translateZ(calc(60px + var(--tz, 0px)));
+    }
+
+    .window-third {
+      left: 10%;
+      bottom: 10%;
+      width: 44%;
+      transform: perspective(900px) rotateX(calc(6deg + var(--rx, 0deg))) rotateY(calc(-12deg + var(--ry, 0deg))) translateZ(calc(78px + var(--tz, 0px)));
+    }
+
+    .window-bar {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      height: 24px;
+      border-bottom: 1px solid rgba(255,255,255,.12);
+      padding: 0 10px;
+      background: rgba(255,255,255,.05);
+    }
+
+    .window-bar i {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: rgba(255,255,255,.32);
+    }
+
+    .device-window img {
+      width: 100%;
+      height: auto;
+    }
+
+    .orbit-label {
+      position: absolute;
+      right: 22px;
+      top: 22px;
+      border: 1px solid rgba(255,255,255,.18);
+      border-radius: var(--pill);
+      padding: 8px 12px;
+      color: var(--body);
+      background: rgba(10,10,10,.48);
+      backdrop-filter: blur(12px);
+      font-size: 12px;
+    }
+
+    .shot-tabs {
+      position: absolute;
+      left: 22px;
+      right: 22px;
+      bottom: 22px;
+      z-index: 5;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .shot-tab {
+      min-height: 34px;
+      border: 1px solid rgba(255,255,255,.16);
+      border-radius: var(--pill);
+      padding: 7px 10px;
+      color: var(--body);
+      background: rgba(10,10,10,.46);
+      backdrop-filter: blur(14px);
+      font: inherit;
+      font-size: 12px;
+      transition: border-color .2s var(--ease), background .2s var(--ease), color .2s var(--ease), transform .2s var(--ease);
+    }
+
+    .shot-tab:hover,
+    .shot-tab:focus-visible,
+    .shot-tab.is-active {
+      border-color: rgba(255,255,255,.52);
+      color: var(--ink);
+      background: rgba(255,255,255,.07);
+      outline: none;
+    }
+
+    .project-proof-strip {
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr);
+      gap: 14px;
+      align-items: center;
+      margin-top: 18px;
+      border-top: 1px solid rgba(255,255,255,.1);
+      padding-top: 18px;
+    }
+
+    .proof-tabs {
+      display: inline-flex;
+      flex-wrap: wrap;
+      gap: 7px;
+    }
+
+    .proof-tab {
+      position: relative;
+      min-height: 32px;
+      border: 1px solid rgba(255,255,255,.18);
+      border-radius: var(--pill);
+      padding: 7px 12px;
+      color: var(--body);
+      background: rgba(255,255,255,.018);
+      font: inherit;
+      font-size: 12px;
+      line-height: 1;
+      transform: translate3d(var(--mx, 0px), var(--my, 0px), 0);
+      transition: border-color .2s var(--ease), background .2s var(--ease), color .2s var(--ease), transform .2s var(--ease);
+    }
+
+    .proof-tab:hover,
+    .proof-tab:focus-visible,
+    .proof-tab.is-active {
+      border-color: rgba(255,255,255,.72);
+      color: var(--ink);
+      background: rgba(255,255,255,.06);
+      outline: none;
+    }
+
+    .proof-note {
+      min-height: 32px;
+      margin: 0;
+      color: var(--body);
+      font-size: 13px;
+      line-height: 1.55;
+    }
+
+    .skills-layout {
+      display: grid;
+      grid-template-columns: minmax(280px, .55fr) minmax(0, 1fr);
+      gap: 34px;
+      align-items: start;
+    }
+
+    .skill-summary {
+      position: sticky;
+      top: 96px;
+      border: 1px solid var(--canvas-line);
+      border-radius: var(--radius-sm);
+      padding: 24px;
+      background: rgba(20,20,21,.72);
+    }
+
+    .skill-summary h3 {
+      margin: 16px 0 18px;
+      font-size: 30px;
+      font-weight: 400;
+      line-height: 1.12;
+    }
+
+    .skill-summary p {
+      color: var(--body);
+      font-size: 15px;
+      line-height: 1.75;
+    }
+
+    .skill-cloud {
+      display: flex;
+      flex-wrap: wrap;
+      align-content: flex-start;
+      gap: 12px;
+      min-height: 360px;
+    }
+
+    .skill-workspace {
+      display: grid;
+      gap: 18px;
+    }
+
+    .skill-chip {
+      position: relative;
+      border: 1px solid rgba(255,255,255,.2);
+      border-radius: var(--pill);
+      padding: 12px 16px;
+      color: var(--body);
+      background: rgba(255,255,255,.025);
+      font-size: 16px;
+      line-height: 1;
+      cursor: default;
+      transform: translate3d(var(--mx, 0), var(--my, 0), 0);
+      transition: transform .18s var(--ease), border-color .18s var(--ease), color .18s var(--ease), background .18s var(--ease);
+    }
+
+    .skill-chip:hover {
+      border-color: rgba(255,255,255,.64);
+      color: var(--ink);
+      background: rgba(255,255,255,.07);
+    }
+
+    .skill-chip.is-active {
+      border-color: rgba(160,195,236,.68);
+      color: var(--ink);
+      background: rgba(160,195,236,.1);
+    }
+
+    .skill-readout {
+      min-height: 132px;
+      border: 1px solid rgba(255,255,255,.1);
+      border-radius: var(--radius-sm);
+      padding: 20px;
+      background:
+        linear-gradient(90deg, rgba(160,195,236,.08), transparent 42%),
+        rgba(14,14,15,.9);
+    }
+
+    .skill-readout h3 {
+      margin: 10px 0 10px;
+      font-size: 26px;
+      font-weight: 400;
+    }
+
+    .skill-readout p {
+      color: var(--body);
+      font-size: 15px;
+      line-height: 1.68;
+    }
+
+    .timeline {
+      position: relative;
+      display: grid;
+      gap: 1px;
+      border: 1px solid rgba(255,255,255,.09);
+      background: rgba(255,255,255,.09);
+      overflow: hidden;
+    }
+
+    .timeline::before {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(160,195,236,.9), transparent);
+      content: "";
+      animation: scan 4.8s var(--ease-out) infinite;
+      z-index: 1;
+    }
+
+    .timeline-row {
+      display: grid;
+      grid-template-columns: 220px 1fr;
+      gap: 24px;
+      min-height: 150px;
+      padding: 24px;
+      background: rgba(12,12,13,.94);
+    }
+
+    .timeline-row time {
+      color: var(--muted);
+      font-family: "Cascadia Mono", Consolas, monospace;
+      font-size: 12px;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    .timeline-row h3 {
+      margin-bottom: 12px;
+      font-size: 24px;
+      font-weight: 400;
+    }
+
+    .timeline-row p {
+      color: var(--body);
+      font-size: 15px;
+      line-height: 1.72;
+    }
+
+    .contact {
+      display: grid;
+      grid-template-columns: minmax(0, .8fr) minmax(300px, .46fr);
+      gap: 42px;
+      align-items: end;
+    }
+
+    .contact h2 {
+      font-size: 82px;
+      font-weight: 400;
+      line-height: .98;
+      text-wrap: pretty;
+      line-break: anywhere;
+      word-break: break-all;
+      overflow-wrap: anywhere;
+    }
+
+    .contact p {
+      max-width: 720px;
+      margin-top: 22px;
+      color: var(--body);
+      font-size: 18px;
+      line-height: 1.68;
+    }
+
+    .contact-card {
+      border: 1px solid var(--canvas-line);
+      border-radius: var(--radius-sm);
+      padding: 24px;
+      background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
+    }
+
+    .contact-line {
+      display: grid;
+      gap: 5px;
+      border-bottom: 1px solid rgba(255,255,255,.08);
+      padding: 16px 0;
+    }
+
+    .contact-line:first-child {
+      padding-top: 0;
+    }
+
+    .contact-line:last-child {
+      border-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .contact-line span {
+      color: var(--muted);
+      font-family: "Cascadia Mono", Consolas, monospace;
+      font-size: 11px;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    .contact-line strong {
+      color: var(--ink);
+      font-size: 15px;
+      font-weight: 400;
+      line-height: 1.45;
+      word-break: break-word;
+    }
+
+    .footer {
+      padding: 26px 0;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(22px);
+      transition: opacity .75s var(--ease-out), transform .75s var(--ease-out);
+    }
+
+    .reveal.is-visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @keyframes sheen {
+      0%, 50% { transform: translateX(-58%); opacity: 0; }
+      66% { opacity: 1; }
+      100% { transform: translateX(74%); opacity: 0; }
+    }
+
+    @keyframes panel-in {
+      from {
+        opacity: 0;
+        transform: translateY(8px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes scan {
+      0% { transform: translateY(-1px); opacity: 0; }
+      16% { opacity: 1; }
+      100% { transform: translateY(610px); opacity: 0; }
+    }
+
+    @media (max-width: 980px) {
+      .nav-inner {
+        min-height: 66px;
+      }
+
+      .nav-links {
+        display: none;
+      }
+
+      .hero {
+        min-height: auto;
+        padding-top: 58px;
+      }
+
+      .hero-grid,
+      .section-head,
+      .project-wrap,
+      .skills-layout,
+      .perspective-console,
+      .contact {
+        grid-template-columns: 1fr;
+      }
+
+      .hero h1 {
+        max-width: 760px;
+        font-size: 72px;
+      }
+
+      .section-head h2 {
+        font-size: 50px;
+      }
+
+      .project-title h2 {
+        font-size: 48px;
+      }
+
+      .contact h2 {
+        font-size: 62px;
+      }
+
+      .hero-panel,
+      .project-copy,
+      .project-stage {
+        min-height: 500px;
+      }
+
+      .skill-summary {
+        position: static;
+      }
+
+      .perspective-panel {
+        min-height: 220px;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .container,
+      .nav-inner {
+        width: min(100% - 28px, var(--container));
+      }
+
+      .hero h1 {
+        font-size: 34px;
+        line-height: 1.04;
+      }
+
+      .mobile-break {
+        display: block;
+      }
+
+      .hero-lead,
+      .project-copy .lead,
+      .contact p {
+        font-size: 16px;
+      }
+
+      .metric strong {
+        font-size: 34px;
+      }
+
+      .section-head h2 {
+        font-size: 38px;
+      }
+
+      .project-title h2 {
+        font-size: 38px;
+      }
+
+      .skill-chip {
+        font-size: 14px;
+      }
+
+      .contact h2 {
+        font-size: 42px;
+      }
+
+      .metrics,
+      .story-grid,
+      .feature-list {
+        grid-template-columns: 1fr;
+      }
+
+      .project-proof-strip {
+        grid-template-columns: 1fr;
+        gap: 10px;
+      }
+
+      .perspective-tab {
+        min-height: 64px;
+        padding: 15px 16px;
+      }
+
+      .perspective-panel {
+        padding: 22px;
+      }
+
+      .perspective-content h3 {
+        font-size: 28px;
+      }
+
+      .section-pad {
+        padding: 64px 0;
+      }
+
+      .project-copy {
+        padding: 22px;
+      }
+
+      .project-title {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .project-stage {
+        min-height: 460px;
+      }
+
+      .shot-tabs {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 6px;
+      }
+
+      .shot-tab {
+        min-height: 30px;
+        padding: 6px 7px;
+        font-size: 11px;
+      }
+
+      .window-main {
+        left: 5%;
+        width: 88%;
+      }
+
+      .window-side {
+        width: 68%;
+      }
+
+      .window-third {
+        width: 58%;
+      }
+
+      .timeline-row {
+        grid-template-columns: 1fr;
+        gap: 12px;
+      }
+
+      .cursor-light {
+        display: none;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        animation-duration: .001ms !important;
+        animation-iteration-count: 1 !important;
+        scroll-behavior: auto !important;
+        transition-duration: .001ms !important;
+      }
+
+      #particle-field,
+      .cursor-light {
+        display: none;
+      }
+
+      .reveal {
+        opacity: 1;
+        transform: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <canvas id="particle-field" aria-hidden="true"></canvas>
+  <div class="noise" aria-hidden="true"></div>
+  <div class="cursor-light" aria-hidden="true"></div>
+
+  <div class="page-shell">
+    <nav class="nav" aria-label="主导航">
+      <div class="nav-inner">
+        <a class="brand magnetic" href="#top" aria-label="返回顶部">
+          <span class="brand-mark">YY</span>
+          <span class="brand-copy">
+            <span class="brand-title">袁越</span>
+            <span class="brand-subtitle">AI PRODUCT BUILDER</span>
+          </span>
+        </a>
+        <div class="nav-links">
+          <a class="magnetic" href="#ai">AI 探索</a>
+          <a class="magnetic" href="#project">MousePointer</a>
+          <a class="magnetic" href="#skills">能力</a>
+          <a class="magnetic" href="#contact">联系</a>
+        </div>
+      </div>
+    </nav>
+
+    <main id="top">
+      <section class="section hero">
+        <div class="container hero-grid">
+          <div class="reveal">
+            <div class="eyebrow mono">Python / AI 应用 / 桌面工具</div>
+            <h1>我用 AI 把想法<br>推进到<br class="mobile-break"><span class="dim">可运行、可发布、<br class="mobile-break">可展示</span>的产品。</h1>
+            <p class="hero-lead">袁越，计算机软件专业，求职方向 Python。熟悉 vibecoding、桌面小程序、全栈落地和内容生成工具，正在把“会用 AI”升级成“能交付产品”。</p>
+            <div class="hero-actions">
+              <a class="button primary magnetic" href="#project">查看重点项目 <span class="arrow">↓</span></a>
+              <a class="button magnetic" href="https://github.com/yuanyue1234" target="_blank" rel="noreferrer">GitHub <span class="arrow">↗</span></a>
+              <a class="button magnetic" href="mailto:yuanyue4321@163.com">发送邮件</a>
+            </div>
+            <div class="metrics" aria-label="个人亮点">
+              <div class="metric">
+                <strong>10+</strong>
+                <span>AI/vibecoding 项目探索，从想法到页面、桌面工具和小程序。</span>
+              </div>
+              <div class="metric">
+                <strong>Top 1%</strong>
+                <span>专业排名靠前，持续补齐 Python、数据处理和应用工程能力。</span>
+              </div>
+              <div class="metric">
+                <strong>v2.1.2</strong>
+                <span>MousePointer 已打包 Release，具备真实用户可下载入口。</span>
+              </div>
+            </div>
+          </div>
+
+          <aside class="hero-panel reveal tilt" aria-label="个人定位摘要">
+            <div class="terminal">
+              <div class="terminal-top">
+                <div class="dots"><span></span><span></span><span></span></div>
+                <div class="terminal-title">portfolio.boot</div>
+              </div>
+              <div class="terminal-lines">
+                <div><span>&gt;</span> load resume: <strong>袁越 / 21 / Python</strong></div>
+                <div><span>&gt;</span> ai_mode: <strong>vibecoding + 快速验证 + 产品化</strong></div>
+                <div><span>&gt;</span> project_focus: <strong>MousePointer 桌面工具</strong></div>
+                <div><span>&gt;</span> target_city: <strong>深圳方向</strong></div>
+                <div><span>&gt;</span> output: <strong>能跑、能看、能发布</strong></div>
+              </div>
+              <div class="profile-strip">
+                <div class="profile-avatar">袁</div>
+                <div>
+                  <h2>AI 产品化新人</h2>
+                  <p>不是只写 Demo，而是把功能、界面、打包、发布和说明文档连起来。</p>
+                </div>
+              </div>
+            </div>
+          </aside>
+        </div>
+      </section>
+
+      <section id="ai" class="section section-pad">
+        <div class="container">
+          <div class="section-head reveal">
+            <div>
+              <div class="mono">AI EXPLORATION</div>
+              <h2>把 AI 当作工程加速器，而不是简历里的关键词。</h2>
+            </div>
+            <p>我的优势是学习快、能拆任务、能把不确定的想法变成可试用的东西。AI 帮我提速，但最终交付要经得起下载、打开、使用和复盘。</p>
+          </div>
+
+          <div class="story-grid">
+            <article class="story-item reveal">
+              <span class="story-index">01 / PROMPT TO PRODUCT</span>
+              <h3>从需求到成品</h3>
+              <p>用 AI 辅助拆解功能、生成初版、补齐边界，再自己做结构整理、调试和交付。重点不是“生成代码”，而是推进到可运行。</p>
+            </article>
+            <article class="story-item reveal">
+              <span class="story-index">02 / FULL STACK SENSE</span>
+              <h3>前后端和桌面都能碰</h3>
+              <p>围绕 Python 做爬虫、数据清洗、桌面工具，也能完成网页展示、说明文档和部署上线这些产品外围工作。</p>
+            </article>
+            <article class="story-item reveal">
+              <span class="story-index">03 / TEACH TO LEARN</span>
+              <h3>能说清楚，也能学得快</h3>
+              <p>少儿编程教学经历训练了表达和备课能力；做项目时会把复杂功能拆成用户能理解、开发能执行的步骤。</p>
+            </article>
+          </div>
+
+          <div class="perspective-console reveal" aria-label="不同视角下的作品集价值">
+            <div class="perspective-tabs" role="tablist" aria-label="视角切换">
+              <button class="perspective-tab magnetic is-active" type="button" role="tab" aria-selected="true" data-perspective="hr">
+                <strong>HR 视角</strong>
+                <span>Hiring</span>
+              </button>
+              <button class="perspective-tab magnetic" type="button" role="tab" aria-selected="false" data-perspective="user">
+                <strong>用户视角</strong>
+                <span>Usability</span>
+              </button>
+              <button class="perspective-tab magnetic" type="button" role="tab" aria-selected="false" data-perspective="maker">
+                <strong>作者视角</strong>
+                <span>Builder</span>
+              </button>
+            </div>
+            <div class="perspective-panel">
+              <article class="perspective-content is-active" data-panel="hr">
+                <h3>我会先看：这个人有没有把项目做完整。</h3>
+                <p>MousePointer 有明确用户、可下载 Release、资源库页面、截图和功能说明。对初级岗位来说，这比只罗列“会 Python”更有说服力，因为它证明了从需求到交付的闭环。</p>
+                <div class="proof-row">
+                  <span class="proof-pill">Release v2.1.2</span>
+                  <span class="proof-pill">GUI Product</span>
+                  <span class="proof-pill">Docs + Pages</span>
+                </div>
+              </article>
+              <article class="perspective-content" data-panel="user">
+                <h3>我会关心：这个工具能不能让我少折腾。</h3>
+                <p>页面把“导入、识别、预览、应用、打包”讲成一个使用路径，而不是技术堆砌。HR 点进来可以直接理解项目解决了什么问题，用户也知道为什么要下载。</p>
+                <div class="proof-row">
+                  <span class="proof-pill">INF 识别</span>
+                  <span class="proof-pill">动态预览</span>
+                  <span class="proof-pill">多格式导入</span>
+                </div>
+              </article>
+              <article class="perspective-content" data-panel="maker">
+                <h3>我会复盘：AI 提速，但细节还是自己兜底。</h3>
+                <p>这个作品集需要展示的不只是“会用 AI”，而是能用 AI 加速拆解，再把交互、素材、隐私边界、发布入口和移动端体验逐项打磨到可展示状态。</p>
+                <div class="proof-row">
+                  <span class="proof-pill">Vibecoding</span>
+                  <span class="proof-pill">Product Sense</span>
+                  <span class="proof-pill">Iteration</span>
+                </div>
+              </article>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="project" class="section section-pad">
+        <div class="container">
+          <div class="section-head reveal">
+            <div>
+              <div class="mono">FLAGSHIP PROJECT</div>
+              <h2>MousePointer：一个给普通用户的鼠标指针配置管理器。</h2>
+            </div>
+            <p>这是当前最适合作品集首屏展示的项目：它有真实用户场景、桌面 GUI、资源导入、预览、打包和在线资源库。</p>
+          </div>
+
+          <div class="project-wrap">
+            <article class="project-copy reveal">
+              <div>
+                <div class="project-title">
+                  <img src="assets/mousepointer-icon.png" alt="MousePointer 项目图标">
+                  <h2>MousePointer</h2>
+                </div>
+                <p class="lead">面向新手用户和鼠标指针制作者的 Windows 图形化工具。它把原本分散、繁琐的指针方案导入、编辑、预览、应用和打包流程，整理成一个可下载的桌面应用。</p>
+
+                <div class="feature-list" aria-label="MousePointer 功能亮点">
+                  <div class="feature">
+                    <span>IMPORT</span>
+                    <p>支持 .cur、.ani、图片、压缩包、exe 和文件夹导入。</p>
+                  </div>
+                  <div class="feature">
+                    <span>INF PARSE</span>
+                    <p>导入资源包时自动识别 .inf，可处理多份指针方案。</p>
+                  </div>
+                  <div class="feature">
+                    <span>PREVIEW</span>
+                    <p>右侧实时预览静态与动态鼠标指针，.ani 可直接播放。</p>
+                  </div>
+                  <div class="feature">
+                    <span>PACKAGE</span>
+                    <p>支持 GIF 截图导出、后台驻留和单文件绿色版发布。</p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="project-actions">
+                <a class="button primary magnetic" href="https://github.com/yuanyue1234/MousePointer" target="_blank" rel="noreferrer">项目仓库 <span class="arrow">↗</span></a>
+                <a class="button magnetic" href="https://yuanyue1234.github.io/MousePointer/resources/" target="_blank" rel="noreferrer">在线资源库 <span class="arrow">↗</span></a>
+                <a class="button magnetic" href="https://github.com/yuanyue1234/MousePointer/releases/download/v2.1.2/MousePointer_Portable.exe" target="_blank" rel="noreferrer">下载 Release</a>
+              </div>
+            </article>
+
+            <div class="project-stage reveal tilt" aria-label="MousePointer 界面截图展示">
+              <div class="orbit-label mono">PYTHON 3.14 / PYSIDE6 / FLUENT UI</div>
+              <figure class="device-window window-main is-selected">
+                <div class="window-bar"><i></i><i></i><i></i></div>
+                <img src="assets/mousepointer-1.png" alt="MousePointer 鼠标方案管理界面截图">
+              </figure>
+              <figure class="device-window window-side">
+                <div class="window-bar"><i></i><i></i><i></i></div>
+                <img src="assets/mousepointer-2.png" alt="MousePointer 资源库界面截图">
+              </figure>
+              <figure class="device-window window-third">
+                <div class="window-bar"><i></i><i></i><i></i></div>
+                <img src="assets/mousepointer-3.png" alt="MousePointer 设置界面截图">
+              </figure>
+              <div class="shot-tabs" role="tablist" aria-label="切换项目截图重点">
+                <button class="shot-tab magnetic is-active" type="button" data-shot="main">方案管理</button>
+                <button class="shot-tab magnetic" type="button" data-shot="side">资源库</button>
+                <button class="shot-tab magnetic" type="button" data-shot="third">设置页</button>
+              </div>
+            </div>
+          </div>
+
+          <section class="project-proof-strip reveal" aria-label="MousePointer 项目证明条">
+            <div class="proof-tabs" role="tablist" aria-label="项目证明切换">
+              <button class="proof-tab magnetic is-active" type="button" role="tab" aria-selected="true" data-proof="import" data-shot="main">导入</button>
+              <button class="proof-tab magnetic" type="button" role="tab" aria-selected="false" data-proof="preview" data-shot="main">预览</button>
+              <button class="proof-tab magnetic" type="button" role="tab" aria-selected="false" data-proof="release" data-shot="third">发布</button>
+            </div>
+            <p class="proof-note" id="proof-note">支持 .cur / .ani / 压缩包 / 文件夹导入，并能自动识别 INF，让资源进入工具的路径更短。</p>
+          </section>
+        </div>
+      </section>
+
+      <section id="skills" class="section section-pad">
+        <div class="container">
+          <div class="section-head reveal">
+            <div>
+              <div class="mono">CAPABILITY MATRIX</div>
+              <h2>我现在能交付的，不止是一段代码。</h2>
+            </div>
+            <p>适合从 Python 应用开发、AI 工具使用、数据处理和桌面工具方向切入，在团队里承担快速验证、脚本自动化、界面工具和内容技术支持。</p>
+          </div>
+
+          <div class="skills-layout">
+            <aside class="skill-summary reveal">
+              <div class="mono">CURRENT STACK</div>
+              <h3>Python 最熟，AI 辅助把执行速度拉起来。</h3>
+              <p>我会继续补强工程规范和测试能力，但已经具备把一个小型产品从需求、界面、功能到发布页面串起来的完整意识。</p>
+            </aside>
+
+            <div class="skill-workspace reveal">
+              <div class="skill-readout" aria-live="polite">
+                <div class="mono">HOVER / TAP A SKILL</div>
+                <h3 id="skill-readout-title">Python 应用开发</h3>
+                <p id="skill-readout-body">把 Python 放在应用交付里使用：脚本、数据处理、桌面 GUI、打包发布和项目说明，而不是停在语法层面。</p>
+              </div>
+              <div class="skill-cloud" aria-label="技能标签">
+                <span class="skill-chip magnetic is-active" data-title="Python 应用开发" data-detail="把 Python 放在应用交付里使用：脚本、数据处理、桌面 GUI、打包发布和项目说明，而不是停在语法层面。">Python</span>
+                <span class="skill-chip magnetic" data-title="Java 基础" data-detail="主修 Java 面向对象程序设计，能理解类、对象、封装和基础工程组织方式。">Java</span>
+                <span class="skill-chip magnetic" data-title="vibecoding" data-detail="用 AI 快速拆解需求、生成初版、辅助调试，再把结果整理成可运行、可展示、可维护的小项目。">vibecoding</span>
+                <span class="skill-chip magnetic" data-title="PySide6 桌面 GUI" data-detail="MousePointer 使用 PySide6 做 Windows 图形化工具，重点体现界面组织、状态管理和用户操作流程。">PySide6</span>
+                <span class="skill-chip magnetic" data-title="Fluent 风格界面" data-detail="项目参考 PyQt-Fluent-Widgets，让工具界面更接近现代 Windows 应用，而不是裸控件拼接。">PyQt-Fluent-Widgets</span>
+                <span class="skill-chip magnetic" data-title="桌面小程序" data-detail="能把一个本地使用场景做成桌面工具：导入资源、预览、应用设置、后台驻留和打包。">桌面小程序</span>
+                <span class="skill-chip magnetic" data-title="爬虫" data-detail="Python 机器学习小组训练内容之一，适合做资料采集、页面解析和自动化数据整理。">爬虫</span>
+                <span class="skill-chip magnetic" data-title="数据清洗" data-detail="能处理原始数据中的格式、缺失、重复和字段整理问题，为分析和可视化做准备。">数据清洗</span>
+                <span class="skill-chip magnetic" data-title="数据可视化" data-detail="能把数据结果整理成更容易理解的图表或页面展示，服务汇报和产品说明。">数据可视化</span>
+                <span class="skill-chip magnetic" data-title="全栈基础" data-detail="能围绕一个小项目补齐前端展示、后端/脚本逻辑、部署说明和在线入口。">全栈基础</span>
+                <span class="skill-chip magnetic" data-title="GitHub Pages" data-detail="能为项目补一个可访问页面，让作品不只停留在仓库代码里。">GitHub Pages</span>
+                <span class="skill-chip magnetic" data-title="Release 打包" data-detail="MousePointer 已有 v2.1.2 单文件绿色版下载入口，说明项目有发布意识。">Release 打包</span>
+                <span class="skill-chip magnetic" data-title="AI 内容工具" data-detail="实习中使用即梦、SD2.0 等工具制作内容，能理解技术和视觉表达之间的衔接。">AI 内容工具</span>
+                <span class="skill-chip magnetic" data-title="剪映" data-detail="能把生成素材继续加工成视频内容，适合内容技术支持和演示材料制作。">剪映</span>
+                <span class="skill-chip magnetic" data-title="Scratch 教学" data-detail="少儿编程教学经历训练了任务拆解、节奏控制和把概念讲清楚的能力。">Scratch 教学</span>
+                <span class="skill-chip magnetic" data-title="课件制作" data-detail="能把技术内容整理成结构化材料，面向不同阶段学习者调整表达方式。">课件制作</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section section-pad">
+        <div class="container">
+          <div class="section-head reveal">
+            <div>
+              <div class="mono">EXPERIENCE</div>
+              <h2>学习、教学、内容制作和工程探索正在汇合。</h2>
+            </div>
+            <p>这些经历让我的求职定位更清楚：用技术做可见的成果，用 AI 提速，用表达能力把复杂事情讲明白。</p>
+          </div>
+
+          <div class="timeline reveal" aria-label="经历时间线">
+            <div class="timeline-row">
+              <time>2023 - 2026</time>
+              <div>
+                <h3>常德职业技术学院 · 计算机软件</h3>
+                <p>专业排名前 1%，主修 Java 面向对象程序设计；参与 Python 机器学习小组，集中学习爬虫、数据分析、数据可视化和数据清洗。</p>
+              </div>
+            </div>
+            <div class="timeline-row">
+              <time>2024.08 - 2025.08</time>
+              <div>
+                <h3>若曦教育 · 少儿编程</h3>
+                <p>制作课件并教授 Python、Scratch3、ScratchJr。教学经历强化了拆解任务、表达逻辑和快速反馈的能力。</p>
+              </div>
+            </div>
+            <div class="timeline-row">
+              <time>2026.03 - 2026.05</time>
+              <div>
+                <h3>湖南锐标信息科技服务有限公司 · 动画制作</h3>
+                <p>使用即梦、SD2.0 等内容生成工具，搭配剪映制作视频，积累 AI 内容生产和视觉表达经验。</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="contact" class="section section-pad">
+        <div class="container contact">
+          <div class="reveal">
+            <div class="mono">CONTACT</div>
+            <h2>如果你在找一个愿意把 AI 真正用进交付的人，可以从这里开始。</h2>
+            <p>我希望从 Python、AI 应用、桌面工具或自动化脚本方向进入团队，先把事情做扎实，再不断把项目规模和工程质量做上去。</p>
+            <div class="contact-actions">
+              <a class="button primary magnetic" href="mailto:yuanyue4321@163.com">发送邮件</a>
+              <a class="button magnetic" href="https://github.com/yuanyue1234" target="_blank" rel="noreferrer">查看 GitHub <span class="arrow">↗</span></a>
+            </div>
+          </div>
+
+          <aside class="contact-card reveal" aria-label="公开联系信息">
+            <div class="contact-line">
+              <span>Name</span>
+              <strong>袁越</strong>
+            </div>
+            <div class="contact-line">
+              <span>Email</span>
+              <strong>yuanyue4321@163.com</strong>
+            </div>
+            <div class="contact-line">
+              <span>GitHub</span>
+              <strong>github.com/yuanyue1234</strong>
+            </div>
+            <div class="contact-line">
+              <span>Direction</span>
+              <strong>Python / AI 应用 / 桌面工具 · 深圳方向</strong>
+            </div>
+          </aside>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div class="container">Built as a static portfolio page. Content is based on resume and public GitHub project information.</div>
+    </footer>
+  </div>
+
+  <script>
+    (() => {
+      const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const cursor = document.querySelector('.cursor-light');
+      const canvas = document.getElementById('particle-field');
+      const ctx = canvas.getContext('2d');
+      let width = 0;
+      let height = 0;
+      let pointerX = window.innerWidth * 0.5;
+      let pointerY = window.innerHeight * 0.35;
+      let smoothX = pointerX;
+      let smoothY = pointerY;
+      let particles = [];
+
+      const resize = () => {
+        const dpr = Math.min(window.devicePixelRatio || 1, 2);
+        width = window.innerWidth;
+        height = window.innerHeight;
+        canvas.width = Math.floor(width * dpr);
+        canvas.height = Math.floor(height * dpr);
+        canvas.style.width = `${width}px`;
+        canvas.style.height = `${height}px`;
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        const count = Math.min(86, Math.max(34, Math.floor(width * height / 22000)));
+        particles = Array.from({ length: count }, (_, i) => ({
+          x: Math.random() * width,
+          y: Math.random() * height,
+          vx: (Math.random() - 0.5) * 0.22,
+          vy: (Math.random() - 0.5) * 0.22,
+          r: i % 7 === 0 ? 1.8 : 1,
+          a: Math.random() * 0.45 + 0.1
+        }));
+      };
+
+      const drawParticles = () => {
+        if (reduceMotion) return;
+        ctx.clearRect(0, 0, width, height);
+        smoothX += (pointerX - smoothX) * 0.12;
+        smoothY += (pointerY - smoothY) * 0.12;
+        ctx.fillStyle = 'rgba(255,255,255,0.55)';
+
+        particles.forEach((p) => {
+          const dx = smoothX - p.x;
+          const dy = smoothY - p.y;
+          const dist = Math.hypot(dx, dy);
+          if (dist < 170) {
+            p.x -= dx * 0.002;
+            p.y -= dy * 0.002;
+          }
+          p.x += p.vx;
+          p.y += p.vy;
+          if (p.x < -20) p.x = width + 20;
+          if (p.x > width + 20) p.x = -20;
+          if (p.y < -20) p.y = height + 20;
+          if (p.y > height + 20) p.y = -20;
+
+          ctx.globalAlpha = p.a;
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+          ctx.fill();
+
+          if (dist < 130) {
+            ctx.globalAlpha = (1 - dist / 130) * 0.24;
+            ctx.strokeStyle = '#ffffff';
+            ctx.beginPath();
+            ctx.moveTo(p.x, p.y);
+            ctx.lineTo(smoothX, smoothY);
+            ctx.stroke();
+          }
+        });
+
+        ctx.globalAlpha = 1;
+        requestAnimationFrame(drawParticles);
+      };
+
+      const revealObserver = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-visible');
+            revealObserver.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.12 });
+
+      document.querySelectorAll('.reveal').forEach((el, index) => {
+        el.style.transitionDelay = `${Math.min(index % 5, 4) * 70}ms`;
+        revealObserver.observe(el);
+      });
+
+      window.setTimeout(() => {
+        document.querySelectorAll('.reveal:not(.is-visible)').forEach((el) => {
+          el.classList.add('is-visible');
+        });
+      }, 900);
+
+      let cursorTarget = null;
+      const finePointer = window.matchMedia('(pointer: fine)').matches;
+
+      const setFreeCursor = () => {
+        if (!cursor || reduceMotion || !finePointer) return;
+        cursor.classList.remove('is-link');
+        cursor.style.setProperty('--cursor-x', `${pointerX}px`);
+        cursor.style.setProperty('--cursor-y', `${pointerY}px`);
+      };
+
+      const absorbCursor = (el) => {
+        if (!cursor || reduceMotion || !finePointer || !el) return;
+        const rect = el.getBoundingClientRect();
+        const centerX = rect.left + rect.width / 2;
+        const centerY = rect.top + rect.height / 2;
+        const pull = el.classList.contains('button') || el.tagName === 'BUTTON' ? 0.34 : 0.22;
+        const x = pointerX + (centerX - pointerX) * pull;
+        const y = pointerY + (centerY - pointerY) * pull;
+        cursor.classList.add('is-link');
+        cursor.style.setProperty('--cursor-x', `${x}px`);
+        cursor.style.setProperty('--cursor-y', `${y}px`);
+      };
+
+      document.addEventListener('pointermove', (event) => {
+        pointerX = event.clientX;
+        pointerY = event.clientY;
+        if (cursorTarget) {
+          absorbCursor(cursorTarget);
+        } else {
+          setFreeCursor();
+        }
+      }, { passive: true });
+
+      document.addEventListener('pointerdown', () => {
+        cursor?.classList.add('is-pressed');
+      });
+
+      document.addEventListener('pointerup', () => {
+        cursor?.classList.remove('is-pressed');
+      });
+
+      document.querySelectorAll('a, button, .skill-chip').forEach((el) => {
+        el.addEventListener('pointerenter', () => {
+          cursorTarget = el;
+          absorbCursor(el);
+        });
+        el.addEventListener('pointerleave', () => {
+          if (cursorTarget === el) cursorTarget = null;
+          cursor?.classList.remove('is-link');
+          setFreeCursor();
+        });
+      });
+
+      const physicsCards = [...document.querySelectorAll([
+        '.hero-panel',
+        '.project-stage',
+        '.device-window'
+      ].join(','))];
+
+      const cardPhysics = new Map();
+      physicsCards.forEach((card) => {
+        card.classList.add('physics-card');
+        cardPhysics.set(card, {
+          rx: 0,
+          ry: 0,
+          z: 0,
+          vx: 0,
+          vy: 0,
+          vz: 0,
+          tx: 0,
+          ty: 0,
+          tz: 0
+        });
+        card.addEventListener('pointerenter', () => {
+          card.classList.add('is-tilting');
+          cardPhysics.get(card).tz = 4;
+        });
+        card.addEventListener('pointermove', (event) => {
+          if (reduceMotion || !finePointer) return;
+          const rect = card.getBoundingClientRect();
+          const px = (event.clientX - rect.left) / rect.width;
+          const py = (event.clientY - rect.top) / rect.height;
+          const depth = card.classList.contains('device-window') ? 4 : 2.8;
+          const state = cardPhysics.get(card);
+          state.ty = (px - .5) * depth * 2;
+          state.tx = (py - .5) * -depth * 2;
+          state.tz = card.classList.contains('device-window') ? 8 : 4;
+          card.style.setProperty('--glare-x', `${px * 100}%`);
+          card.style.setProperty('--glare-y', `${py * 100}%`);
+          card.style.setProperty('--shadow-x', `${(px - .5) * 18}px`);
+          card.style.setProperty('--shadow-y', `${18 + py * 10}px`);
+        });
+        card.addEventListener('pointerleave', () => {
+          card.classList.remove('is-tilting');
+          const state = cardPhysics.get(card);
+          state.tx = 0;
+          state.ty = 0;
+          state.tz = 0;
+          card.style.setProperty('--shadow-x', '0px');
+          card.style.setProperty('--shadow-y', '18px');
+        });
+      });
+
+      const animatePhysics = () => {
+        if (reduceMotion) return;
+        cardPhysics.forEach((state, card) => {
+          state.vx += (state.tx - state.rx) * .095;
+          state.vy += (state.ty - state.ry) * .095;
+          state.vz += (state.tz - state.z) * .12;
+          state.vx *= .78;
+          state.vy *= .78;
+          state.vz *= .74;
+          state.rx += state.vx;
+          state.ry += state.vy;
+          state.z += state.vz;
+          card.style.setProperty('--rx', `${state.rx.toFixed(3)}deg`);
+          card.style.setProperty('--ry', `${state.ry.toFixed(3)}deg`);
+          card.style.setProperty('--tz', `${state.z.toFixed(3)}px`);
+        });
+        requestAnimationFrame(animatePhysics);
+      };
+
+      document.querySelectorAll('.magnetic').forEach((el) => {
+        el.addEventListener('pointermove', (event) => {
+          if (reduceMotion || !finePointer) return;
+          const rect = el.getBoundingClientRect();
+          const x = event.clientX - rect.left - rect.width / 2;
+          const y = event.clientY - rect.top - rect.height / 2;
+          el.style.setProperty('--mx', `${x * 0.05}px`);
+          el.style.setProperty('--my', `${y * 0.07}px`);
+        });
+        el.addEventListener('pointerleave', () => {
+          el.style.setProperty('--mx', '0px');
+          el.style.setProperty('--my', '0px');
+        });
+      });
+
+      document.querySelectorAll('.tilt').forEach((el) => {
+        if (el.classList.contains('physics-card')) return;
+        el.addEventListener('pointermove', (event) => {
+          if (reduceMotion) return;
+          const rect = el.getBoundingClientRect();
+          const x = (event.clientX - rect.left) / rect.width - 0.5;
+          const y = (event.clientY - rect.top) / rect.height - 0.5;
+          el.style.transform = `rotateX(${y * -4}deg) rotateY(${x * 5}deg)`;
+        });
+        el.addEventListener('pointerleave', () => {
+          el.style.transform = '';
+        });
+      });
+
+      const scrollToHash = (hash, behavior = 'smooth') => {
+        const target = document.querySelector(hash);
+        if (!target) return;
+        const top = target.getBoundingClientRect().top + window.scrollY - 74;
+        window.scrollTo({
+          top: Math.max(0, top),
+          behavior: reduceMotion ? 'auto' : behavior
+        });
+      };
+
+      document.querySelectorAll('a[href^="#"]').forEach((link) => {
+        link.addEventListener('click', (event) => {
+          const hash = link.getAttribute('href');
+          if (!hash || hash === '#') return;
+          event.preventDefault();
+          scrollToHash(hash);
+          history.pushState(null, '', hash);
+        });
+      });
+
+      if (window.location.hash) {
+        window.setTimeout(() => scrollToHash(window.location.hash, 'auto'), 80);
+      }
+
+      const navLinks = [...document.querySelectorAll('.nav-links a[href^="#"]')];
+      const navSections = navLinks
+        .map((link) => document.querySelector(link.getAttribute('href')))
+        .filter(Boolean);
+      const setActiveNav = (id) => {
+        navLinks.forEach((link) => {
+          link.classList.toggle('is-active', link.getAttribute('href') === `#${id}`);
+        });
+      };
+      const navObserver = new IntersectionObserver((entries) => {
+        const visible = entries
+          .filter((entry) => entry.isIntersecting)
+          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+        if (visible?.target?.id) setActiveNav(visible.target.id);
+      }, { rootMargin: '-24% 0px -52% 0px', threshold: [0.12, 0.28, 0.48] });
+      navSections.forEach((section) => navObserver.observe(section));
+
+      const perspectivePanel = document.querySelector('.perspective-panel');
+      document.querySelectorAll('.perspective-tab').forEach((tab, index) => {
+        tab.addEventListener('click', () => {
+          const key = tab.dataset.perspective;
+          document.querySelectorAll('.perspective-tab').forEach((item) => {
+            const active = item === tab;
+            item.classList.toggle('is-active', active);
+            item.setAttribute('aria-selected', active ? 'true' : 'false');
+          });
+          document.querySelectorAll('.perspective-content').forEach((panel) => {
+            panel.classList.toggle('is-active', panel.dataset.panel === key);
+          });
+          perspectivePanel?.style.setProperty('--panel-x', `${38 + index * 20}%`);
+          perspectivePanel?.style.setProperty('--panel-y', `${34 + index * 12}%`);
+          absorbCursor(tab);
+        });
+      });
+
+      const shotMap = {
+        main: '.window-main',
+        side: '.window-side',
+        third: '.window-third'
+      };
+      const selectShot = (shotKey) => {
+        const selector = shotMap[shotKey];
+        if (!selector) return;
+        document.querySelectorAll('.shot-tab').forEach((item) => {
+          item.classList.toggle('is-active', item.dataset.shot === shotKey);
+        });
+        document.querySelectorAll('.device-window').forEach((windowEl) => windowEl.classList.remove('is-selected'));
+        document.querySelector(selector)?.classList.add('is-selected');
+      };
+      document.querySelectorAll('.shot-tab').forEach((tab) => {
+        tab.addEventListener('click', () => {
+          selectShot(tab.dataset.shot);
+          absorbCursor(tab);
+        });
+      });
+
+      const proofNotes = {
+        import: {
+          shot: 'main',
+          text: '支持 .cur / .ani / 压缩包 / 文件夹导入，并能自动识别 INF，让资源进入工具的路径更短。'
+        },
+        preview: {
+          shot: 'main',
+          text: '右侧实时预览静态与动态指针，.ani 可以直接播放，用户不用反复试错。'
+        },
+        release: {
+          shot: 'third',
+          text: 'Release、README、截图和资源库形成闭环，别人能下载、打开，也能理解项目价值。'
+        }
+      };
+      const proofNote = document.getElementById('proof-note');
+      document.querySelectorAll('.proof-tab').forEach((button) => {
+        button.addEventListener('click', () => {
+          const key = button.dataset.proof;
+          const data = proofNotes[key];
+          if (!data) return;
+          document.querySelectorAll('.proof-tab').forEach((item) => {
+            const active = item === button;
+            item.classList.toggle('is-active', active);
+            item.setAttribute('aria-selected', active ? 'true' : 'false');
+          });
+          if (proofNote) proofNote.textContent = data.text;
+          selectShot(button.dataset.shot || data.shot);
+          absorbCursor(button);
+        });
+      });
+      const readoutTitle = document.getElementById('skill-readout-title');
+      const readoutBody = document.getElementById('skill-readout-body');
+      const updateSkillReadout = (chip) => {
+        document.querySelectorAll('.skill-chip').forEach((item) => item.classList.toggle('is-active', item === chip));
+        if (readoutTitle) readoutTitle.textContent = chip.dataset.title || chip.textContent.trim();
+        if (readoutBody) readoutBody.textContent = chip.dataset.detail || '这项能力会被放进真实交付场景里验证，而不是只停留在标签。';
+      };
+      document.querySelectorAll('.skill-chip').forEach((chip) => {
+        chip.addEventListener('pointerenter', () => updateSkillReadout(chip));
+        chip.addEventListener('focus', () => updateSkillReadout(chip));
+        chip.addEventListener('click', () => updateSkillReadout(chip));
+      });
+
+      window.addEventListener('resize', resize, { passive: true });
+      resize();
+      setFreeCursor();
+      animatePhysics();
+      drawParticles();
+    })();
+  </script>
+</body>
+</html>
