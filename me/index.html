@@ -1955,12 +1955,20 @@
       const style = getComputedStyle(element);
       const centerX = rect.left + rect.width / 2;
       const centerY = rect.top + rect.height / 2;
-      const strongTarget = element.matches("a, button, summary");
+      const compactTarget = element.matches("a, button, summary, .dot, .filter-chip");
+      const cardTarget = element.matches(".project-tab, .skill-card, .mini-node, .timeline-card, .contact-card, .proof");
+      const stageTarget = element.matches(".project-stage, .panel-media, .shot-window");
+      const padX = compactTarget ? 14 : cardTarget ? 22 : stageTarget ? 28 : 18;
+      const padY = compactTarget ? 12 : cardTarget ? 22 : stageTarget ? 28 : 18;
+      const maxW = Math.max(120, window.innerWidth - 28);
+      const maxH = Math.max(80, window.innerHeight - 28);
+      const targetW = Math.min(rect.width + padX, stageTarget ? Math.min(maxW, 760) : cardTarget ? Math.min(maxW, 420) : Math.min(maxW, 280));
+      const targetH = Math.min(rect.height + padY, stageTarget ? Math.min(maxH, 560) : cardTarget ? Math.min(maxH, 240) : Math.min(maxH, 110));
       cursor.classList.add("is-link", "is-absorbed");
       cursor.style.setProperty("--cursor-x", `${centerX}px`);
       cursor.style.setProperty("--cursor-y", `${centerY}px`);
-      cursor.style.setProperty("--absorb-w", `${Math.min(strongTarget ? rect.width + 12 : 36, 180)}px`);
-      cursor.style.setProperty("--absorb-h", `${Math.min(strongTarget ? rect.height + 12 : 36, 72)}px`);
+      cursor.style.setProperty("--absorb-w", `${targetW}px`);
+      cursor.style.setProperty("--absorb-h", `${targetH}px`);
       cursor.style.setProperty("--absorb-r", style.borderRadius || "999px");
     }
 
@@ -1977,7 +1985,7 @@
       document.addEventListener("pointerdown", () => cursor.classList.add("is-pressed"));
       document.addEventListener("pointerup", () => cursor.classList.remove("is-pressed"));
 
-      document.querySelectorAll("a, button, summary, .skill-card, .project-tab, .mini-node").forEach((element) => {
+      document.querySelectorAll("a, button, summary, .skill-card, .project-tab, .mini-node, .project-stage, .panel-media, .shot-window, .proof, .timeline-card, .contact-card").forEach((element) => {
         element.addEventListener("pointerenter", () => {
           cursorTarget = element;
           absorbCursor(element);
